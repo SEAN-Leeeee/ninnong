@@ -37,7 +37,9 @@
 
           <div class="request-modal-content">
             <p class="request-profile"><strong>이름:</strong> {{ user.name }}</p>
-            <p class="request-profile"><strong>선출:</strong> {{ user.draftLevel }}</p>
+            <label for="draftLevelOptions" class="request-profile">
+              <strong>선출:</strong> {{ draftLevelOptions[user.draftLevel] }}
+            </label>
 
             <textarea
                 v-model="requestMsg"
@@ -78,7 +80,14 @@ export default {
       showRequestModal: false,
       requestMsg: '',
       requestSent: false,
-        }
+      draftLevelOptions: {
+        ELEMENTARY: '초등부',
+        MIDDLE: '중등부',
+        HIGH: '고등부',
+        UNIVERSITY: '대학부',
+        NONE: '해당없음',
+      },
+    }
   },
   computed: {
     user() {

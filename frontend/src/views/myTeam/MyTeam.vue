@@ -22,11 +22,12 @@
 
     <!-- 하단 구조: 좌측 탭 + 우측 콘텐츠 -->
     <section class="team-content-box">
-      <aside class="team-sidebar">
+      <aside class="community-sidebar">
         <button
+            class="button"
+            :class="{ active: selectedTab === tab.value }"
             v-for="tab in tabs"
             :key="tab.value"
-            :class="['tab-button', { active: selectedTab === tab.value }]"
             @click="selectedTab = tab.value"
         >
           {{ tab.label }}
@@ -129,3 +130,120 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+.myteam-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.team-header-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.team-header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.team-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #eee;
+}
+
+.team-text-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.team-name {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.team-member-count {
+  font-size: 14px;
+  color: #555;
+  margin: 4px 0;
+}
+
+.team-description {
+  font-size: 14px;
+  color: #777;
+  margin-top: 8px;
+  max-width: 400px;
+}
+
+.team-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.team-map-box {
+  width: 300px;
+  height: 120px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+}
+
+.team-content-box {
+  display: flex;
+  gap: 20px;
+}
+
+.community-sidebar {
+    width: 190px;
+    min-width: 190px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.button {
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 17px;
+    font-weight: 700;
+    padding: 10px 18px;
+    width: 100%;
+    color: #94a3b8;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background 0.2s, color 0.2s;
+    margin-bottom: 2px;
+}
+
+.button:hover,
+.button.active {
+    background: #f1f5f9;
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.team-panel {
+  flex: 1;
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+</style>
