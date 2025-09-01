@@ -1,0 +1,68 @@
+# --- 공통 ---
+.DS_Store
+*.log
+logs/
+tmp/
+*.tmp
+
+# --- Gradle/Java ---
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# IntelliJ / VSCode / STS / NetBeans
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+.vscode/
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# --- 환경변수/비밀 ---
+.env
+.env.*
+# 프론트엔드용 env
+frontend/.env
+frontend/.env.*
+
+# --- Spring 설정(실파일 금지) ---
+# 실제 yml/properties는 커밋 금지
+src/main/resources/application.yml
+src/main/resources/application-*.yml
+src/main/resources/*.properties
+# 예시 파일만 허용(원하면 사용)
+!src/main/resources/application-example.yml
+
+# --- 파일 업로드/시크릿 ---
+/uploads
+secrets/
+**/*.pem
+**/*.key
+**/*.crt
+**/*.jks
+
+# --- 프론트엔드 빌드/캐시 ---
+frontend/node_modules/
+frontend/dist/
+frontend/.next/
+frontend/.nuxt/

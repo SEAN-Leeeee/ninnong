@@ -1,0 +1,131 @@
+<template>
+  <div class="myteam-container">
+    <!-- 상단 팀 정보 -->
+    <section class="team-header-box">
+      <div class="team-header-left">
+        <img :src="getTeamLogo(team)" alt="팀 로고" class="team-logo" />
+        <div class="team-text-info">
+          <h2 class="team-name">{{ team.name || '팀 이름' }}</h2>
+          <p class="team-member-count">인원: {{ team.memberCount }}명</p>
+          <div class="team-description">
+            {{ team.description || '팀 소개가 아직 작성되지 않았습니다.' }}
+          </div>
+        </div>
+      </div>
+      <div class="team-header-right">
+        <div class="team-map-box">
+          정기 운동 일정 /
+          지도 영역 (예정)
+        </div>
+      </div>
+    </section>
+
+    <!-- 하단 구조: 좌측 탭 + 우측 콘텐츠 -->
+    <section class="team-content-box">
+      <aside class="team-sidebar">
+        <button
+            v-for="tab in tabs"
+            :key="tab.value"
+            :class="['tab-button', { active: selectedTab === tab.value }]"
+            @click="selectedTab = tab.value"
+        >
+          {{ tab.label }}
+        </button>
+      </aside>
+
+      <main class="team-panel">
+        <MemberManage
+            v-if="selectedTab === 'member'"
+            :memberList="memberList"
+            :leader="leader"
+            :user-id="user.id"
+            :is-leader="isLeader"
+            @save-members="handleSaveMembers"
+        />
+        <AttendancePanel v-if="selectedTab === 'activities'" />
+        <VideoPanel v-if="selectedTab === 'video'" />
+        <FeePanel v-if="selectedTab === 'fee'" />
+      </main>
+    </section>
+  </div>
+</template>
+<script>
+import api from "@/axios.js";
+import { useUserStore } from '@stores/user.js'
+import { watch } from 'vue';
+
+import AttendancePanel from './Activities.vue'
+import VideoPanel from './VideoPanel.vue'
+import MemberManage from './Members.vue'
+import FeePanel from './FeePanel.vue'
+export default {
+  name: 'MyTeam',
+  components: {
+    AttendancePanel,
+    VideoPanel,
+    MemberManage,
+    FeePanel
+  },
+  data() {
+    return {
+      team: {},
+      memberList:[],
+      selectedTab: 'member',
+      tabs: [
+        { label: '멤버', value: 'member' },
+        { label: '활동', value: 'activities' },
+        { label: '영상', value: 'video' },
+        { label: '회비', value: 'fee' }
+      ],
+      leader: {},
+      isLeader: false,
+    };
+  },
+  mounted() {
+    watch(
+        () => this.user,
+        (newUser) => {
+          if (newUser && newUser.teamId) {
+            this.getTeamInfo(newUser.teamId);
+            this.getMemberList(newUser.teamId);
+          }
+        },
+        { immediate: true },
+
+    );
+  },
+  computed: {
+    user() {
+      const userStore = useUserStore();
+      return userStore.currentUser;
+    },
+  },
+  methods: {
+    getTeamLogo(team) {
+      return team.logo ? `http://localhost:8080${team.logo}` : '/basic.png';
+    },
+    async getMemberList(teamId) {
+      const res = await api.get(`/members/${teamId}`);
+      this.memberList = res.data;
+
+      this.findLeader();
+    },
+    async getTeamInfo(teamId) {
+      const res = await api.get(`/teams/${teamId}`);
+      this.team = {
+        ...res.data,
+        memberCount: res.data.memberCount,
+        description: res.data.description,
+      };
+    },
+    findLeader() {
+      this.leader = this.memberList.find(member => member.role === 'LEADER');
+      this.isLeader = this.leader.userId === this.user.id;
+    },
+    async handleSaveMembers(updatedList) {
+      await api.patch(`/members/${this.team.id}`, updatedList);
+      this.memberList = updatedList;
+    }
+  },
+};
+</script>

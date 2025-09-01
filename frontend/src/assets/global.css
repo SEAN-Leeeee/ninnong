@@ -1,0 +1,4386 @@
+/* ===== Community.vue: scoped board rules (.community-board) ===== */
+.community-board .c-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 140px 160px; /* 말머리 / 제목 / 작성자 / 작성일 */
+    align-items: center;
+    height: 36px;
+    padding: 0 10px;
+    column-gap: 12px;
+}
+.community-board .list-header {
+    height: 34px;
+    font-weight: 600;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+    background: transparent; /* 헤더 배경 제거 */
+}
+.community-board .c-item {
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+    font-size: 14px;
+}
+.community-board .c-item:hover { background: #f9fafb; }
+
+/* Subject badges + notice rows (scoped) */
+.community-board .c-item.notice { background: #fffbea; }
+.community-board .c-item.notice:hover { background: #fff4c6; }
+
+.community-board .subject-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1;
+    border: 1px solid transparent;
+    background: #eef2f7;
+    color: #334155;
+    vertical-align: middle;
+}
+.community-board .subject-badge.subject-notice {
+    background: #fef3c7;
+    border-color: #fde68a;
+    color: #92400e;
+}
+.community-board .subject-badge.subject-event {
+    background: #fff7ed;
+    border-color: #fed7aa;
+    color: #9a3412;
+}
+.community-board .subject-badge.subject-promo {
+    background: #e0e7ff;
+    border-color: #c7d2fe;
+    color: #3730a3;
+}
+.community-board .subject-badge.subject-matching {
+    background: #dbeafe;
+    border-color: #bfdbfe;
+    color: #1e40af;
+}
+.community-board .subject-badge.subject-free {
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+    color: #334155;
+}
+
+/* Cell tweaks */
+.community-board .c-title {
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.community-board .c-date { text-align: right; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.community-board .c-subject { color: #475569; }
+.community-board .c-nick { color: #64748b; }
+
+.button-blue {
+    flex: 1;
+    background-color: #2563eb;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 14px 0;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.button-blue:hover {
+    background-color: #1d4ed8;
+}
+.schedule-row {
+    display: flex;
+    gap: 12px;
+}
+
+.schedule-row select {
+    flex: 1;
+}
+
+.team-board-logo-banner {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 0;
+    margin-bottom: 1rem;
+}
+
+.team-board-logo-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+/* ===== Auth Page: Fullscreen black background + WebGL background (LightRays/Galaxy) ===== */
+.auth-page {
+    width: 100vw;
+    min-height: 100vh;  /* 기본 */
+    height: 100vh;
+    /* 모바일 주소창 변화 대응 */
+    min-height: 100dvh;
+    height: 90vh;
+
+    background-color: #000; /* 완전 검정 배경 */
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* 위에서부터 쌓이게 */
+    padding-top: 10px;
+    gap: 20px;
+
+    position: relative;
+    overflow: hidden;
+
+    /* z-index 충돌 방지 (배경/폼 레이어 분리) */
+    isolation: isolate;
+}
+
+
+.headline-xl {
+    font-size: 36px;     /* 크기 */
+    font-weight: 700;    /* 두께 */
+    color: #ffffff;      /* 원하는 색상 (#000, red, rgb 등도 가능) */
+    line-height: 1.3;
+    text-align: left; /* 왼쪽 정렬 */
+
+}
+/* 배경 효과 컨테이너 (LightRays 또는 Galaxy를 뒤에 전 화면으로) */
+.auth-page .light-rays-container,
+.auth-page .galaxy-container {
+    position: absolute;
+    inset: 0;          /* top:0; right:0; bottom:0; left:0; 동일 */
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none; /* 배경 클릭 막기 (필요 시 해제) */
+}
+
+/* 캔버스 렌더링 깨짐 방지 */
+.auth-page .light-rays-container canvas,
+.auth-page .galaxy-container canvas {
+    display: block;
+}
+
+/* 로그인 폼/콘텐츠는 항상 배경 위로 */
+.auth-page > *:not(.light-rays-container):not(.galaxy-container) {
+    position: relative;
+    z-index: 1;
+}
+
+.team-header-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.team-header-left {
+    display: flex;
+    flex: 2;
+    gap: 1.5rem;
+}
+
+.team-header-right {
+    flex: 1;
+}
+
+.team-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    object-fit: cover;
+    background-color: #f4f4f4;
+}
+
+.team-text-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.team-description {
+    background-color: #f6f8fa;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #333;
+    max-width: 400px;
+}
+
+.team-map-box {
+    background-color: #f4f6f9;
+    border-radius: 10px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+}
+
+/* Sidebar Tabs */
+.team-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 0;
+    min-width: 140px;
+    border-right: 1px solid #e5e7eb;
+}
+
+
+.tab-button:hover {
+    background-color: #f3f4f6;
+    color: #2563eb;
+}
+
+.tab-button.active {
+    background-color: #e0f2fe;
+    font-weight: 600;
+    color: #2563eb;
+}
+
+/* 팀 상세 헤더 로고 이미지(크기 고정 및 정렬) */
+.team-logo-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-right: 6px;
+}
+.header-hidden {
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+}
+.header {
+    transition: transform 0.3s ease;
+}
+/* ========== Global ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Noto Sans KR", sans-serif;
+}
+
+html, body {
+    height: 100%;
+    overflow-y: scroll;
+}
+body {
+    background-color: #ffffff;
+    color: #1f2937;
+    font-size: 16px;
+    line-height: 1.5;
+    padding-top: 60px;
+    height: auto;
+    /* overflow-y: auto; */
+}
+
+/* ========== Header ========== */
+
+.header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    height: 64px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+}
+
+.header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.top-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.bottom-row {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-left: 1.5rem;
+    margin-top: 6px;
+}
+/* 로그인 페이지 로고 위치 및 스타일 */
+.logo {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    z-index: 2;
+}
+
+.logo img {
+    height: 32px;
+    object-fit: contain;
+}
+
+.slogan {
+    font-size: 13px;
+    color: #6b7280;
+    margin-left: 4px;
+}
+
+.bottom-row {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-left: 1rem;
+}
+
+.nav {
+    display: flex;
+    gap: 24px;
+    padding-left: 30rem;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #6b7280;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 8px 0;
+    position: relative;
+    transition: color 0.2s;
+}
+
+.nav-item:hover {
+    color: #2563eb;
+}
+
+.router-link-active.nav-item {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.router-link-active.nav-item::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 100%;
+    height: 2px;
+    background-color: #2563eb;
+}
+
+.community-wrapper {
+    display: flex;
+    align-items: flex-start; /* 사이드바와 메인 콘텐츠의 상단 정렬 */
+    gap: 24px; /* 사이드바와 메인 콘텐츠 사이의 간격 */
+}
+
+.community-sidebar {
+    width: 190px;
+    min-width: 190px;        /* 폭 고정 (우측 변화에 영향받지 않음) */
+    padding-top: 0;          /* 상단 여백 제거 → sticky 기준 정확히 맞춤 */
+    flex-shrink: 0;          /* 축소 금지 */
+    display: flex;
+    flex-direction: column;
+    position: sticky;        /* 스크롤 시 고정 */
+    top: 88px;               /* 고정 헤더(64px) + 페이지 상단 패딩(24px) 기준 */
+    z-index: 1;              /* 우발적 겹침 방지(필요 최소) */
+}
+
+/* Sidebar vertical alignment locks regardless of toolbar content */ㅜ
+                                                                        /* 탭이 렌더링될 때(= 전체/자유가 아닐 때) 사이드바 top을 추가 보정 */
+                                                                    .community-wrapper:has(.status-tabs.subject-tabs) .community-sidebar {
+                                                                        top: 128px; /* 기본 88px + 탭/간격 높이 보정 (필요 시 120~136px 사이로 미세 조정) */
+                                                                    }
+
+.community-sidebar .button {
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 17px;
+    font-weight: 700;
+    padding: 10px 18px;
+    width: 100%;
+    color: #94a3b8;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background 0.2s, color 0.2s;
+    margin-bottom: 2px;
+}
+
+.community-sidebar .button:hover,
+.community-sidebar .button.active {
+    background: #f1f5f9;
+    color: #2563eb;
+    font-weight: 700;
+}
+.community-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+.main-content-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* 추가된 글쓰기 상단 툴바 */
+.top-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.toolbar-left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.write-button {
+    padding: 8px 16px;
+    background-color: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.write-button:hover {
+    background-color: #1d4ed8;
+}
+
+.sticky-top-block {
+    flex-shrink: 0;
+    background-color: #ffffff;
+    z-index: 2;
+    padding-top: 8px;
+    padding-bottom: 12px;
+}
+
+.filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    justify-content: right;
+}
+
+.filter-row button {
+    padding: 6px 12px;
+    border: 1px solid #d1d5db;
+    background-color: #f9fafb;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #374151;
+}
+
+.filter-row button:hover {
+    background-color: #eff6ff;
+    border-color: #93c5fd;
+}
+
+
+.filter-row select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: #ffffff;
+    width: 200px;
+    flex: 0 0 auto;
+}
+
+.filter-row button.active {
+    background-color: #2563eb;
+    color: white;
+    border-color: #2563eb;
+    font-weight: 600;
+}
+.centered-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.post-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+
+.post-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.category-badge {
+    background-color: #22c55e;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.post-title {
+    color: #111827;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.post-bottom {
+    font-size: 13px;
+    color: #6b7280;
+    display: flex;
+    gap: 12px;
+}
+
+/* (이후 나머지는 기존 코드 그대로 유지) */
+
+/* ========== Team Card (디멘드 / 원티드 스타일) ========== */
+.team-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    /*height: calc(100vh - 88px);  !* 수정! *!*/
+}
+
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+    justify-content: center;
+    position: sticky;
+    top: 88px;
+    z-index: 10;
+    background: #fff;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    justify-content: right;
+
+}
+
+.filter-buttons .button {
+    padding: 8px 18px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    color: #374151;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.filter-buttons .button:hover {
+    background-color: #eff6ff;
+    border-color: #93c5fd;
+}
+
+/* ★ 추가: 카드 스크롤 구역 ★ */
+.card-scroll-area {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px 20px;
+}
+
+.card-box {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.card-box:hover {
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+}
+
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+}
+
+.card-image-box {
+    width: 100%;
+    height: 160px;
+    background-color: #f3f4f6;
+    overflow: hidden;
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-info {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.team-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.team-sub {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+/* ========== Team Page (팀 전용 섹션) ========== */
+.team-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
+
+.team-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+.team-logo {
+    width: 80px;
+    height: 80px;
+    background-color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.team-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.team-content {
+    display: flex;
+    flex: 1;
+    gap: 48px;
+}
+.team-sidebar {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 20px;
+}
+.team-wrapper > .team-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 2rem;
+}
+
+.team-sidebar .button {
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 17px;
+    font-weight: 700;
+    padding: 10px 18px;
+    width: 100%;
+    color: #94a3b8;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background 0.2s, color 0.2s;
+}
+.team-sidebar button {
+    padding: 0.75rem 1rem;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    text-align: left;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.team-sidebar button:hover {
+    background-color: #f0f0f0;
+}
+
+.team-sidebar .button.active {
+    background: #f1f5f9;
+    color: #2563eb;
+}
+.team-main {
+    flex: 1;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.notice-section {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.schedule-section {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: center;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: #ffffff;
+}
+
+.calendar-box {
+    width: 300px;
+    height: auto;
+}
+
+.calendar-img {
+    width: 100%;
+    border-radius: 6px;
+}
+
+.event-list {
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.post-editor-wrapper {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.title-input {
+    padding: 12px;
+    font-size: 18px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+.toolbar button {
+    margin-right: 8px;
+}
+.content-editor {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 12px;
+    min-height: 320px;
+    font-size: 16px;
+    line-height: 1.5;
+    outline: none;
+}
+.file-item {
+    font-size: 14px;
+    margin-top: 4px;
+}
+.file-item button {
+    margin-left: 6px;
+    cursor: pointer;
+}
+.submit-row {
+    text-align: right;
+}
+.submit-button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.write-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.category-select select {
+    margin-right: 8px;
+    padding: 6px;
+}
+.title-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+.tool-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.editor-area {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 12px;
+    min-height: 300px;
+}
+.editor-area textarea {
+    width: 100%;
+    height: 150px;
+    resize: vertical;
+    margin-bottom: 10px;
+
+}
+.inserted-item {
+    position: relative;
+    margin-bottom: 10px;
+}
+.preview-image {
+    max-width: 100%;
+    height: auto;
+}
+.poll-box {
+    background: #f3f3f3;
+    padding: 8px;
+    border-radius: 4px;
+}
+.file-box {
+    margin-top: 10px;
+    max-height: 120px;
+    overflow-y: auto;
+    border: 1px dashed #ccc;
+    padding: 10px;
+}
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+.submit-area {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+.submit-btn {
+    background-color: #2261e9;
+    color: #fff;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 4px;
+}
+.write-btn {
+    display: inline-block;
+    padding: 10px 16px;
+    background-color: #2261e9;
+    color: white;
+    border-radius: 8px;
+    margin: 12px 0;
+}
+/* === 게시글 상세 전체 영역 === */
+.post-detail-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 24px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.category {
+    font-size: 18px;
+    color: #ff7f00;
+    font-weight: bold;
+}
+.post-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+.post-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 16px;
+}
+.post-content {
+    font-size: 16px;
+    line-height: 1.7;
+    padding: 20px 0;
+    white-space: pre-line;
+    min-height: 300px;
+}
+
+/* === 버튼 그룹 === */
+.button-group {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.back-btn,
+.edit-btn,
+.delete-btn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.back-btn {
+    background-color: #e5e7eb;
+    color: #333;
+}
+.edit-btn {
+    background-color: #2c3e50;
+    color: white;
+}
+.delete-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* === 댓글 전체 섹션 === */
+.comment-wrapper {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+.comment-count {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+/* === 댓글 입력창 === */
+.comment-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+.comment-textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    resize: vertical;
+    font-size: 14px;
+    font-family: inherit;
+}
+.comment-submit-btn {
+    align-self: flex-end;
+    background-color: #2563eb;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* === 댓글 아이템 === */
+.comment-item {
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    transition: all 0.2s ease-in-out;
+}
+.comment-item:hover {
+    background-color: #f1f5f9;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+.comment-body {
+    font-size: 15px;
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.comment-actions {
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+    color: #2563eb;
+}
+.comment-actions button {
+    background: none;
+    border: none;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* === 답글 입력창 === */
+.reply-input {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.reply-input textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    resize: vertical;
+    font-size: 14px;
+}
+.reply-input button {
+    align-self: flex-end;
+    background-color: #2563eb;
+    color: white;
+    padding: 6px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* === 팀 보드 모달 === */
+.team-board-modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.team-board-modal {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    width: 360px;
+    position: relative;
+}
+
+.team-board-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.team-board-logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.team-board-logo img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.team-board-info {
+    font-size: 16px;
+    color: #1f2937;
+    line-height: 1.8;
+}
+
+.team-board-info p {
+    margin-bottom: 10px;
+}
+
+.team-board-info a {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.team-board-actions {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.team-join-button {
+    padding: 10px 24px;
+    background-color: #2563eb;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+/* 팀 카드 레이아웃 전체 */
+/* Team card grid: 4 cards per row */
+.team-card-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    padding: 32px 0;
+    justify-items: center;
+}
+
+/* 개별 카드 박스 */
+.team-card {
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.team-card:hover {
+    transform: translateY(-4px);
+}
+
+/* 이미지 영역 */
+.team-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background-color: #f5f5f5;
+}
+
+/* 카드 안 내용 */
+.team-card-content {
+    padding: 16px;
+}
+
+.team-card-content h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #1e1e1e;
+}
+
+.team-card-content p {
+    font-size: 14px;
+    color: #555;
+    margin: 2px 0;
+}
+.post-row {
+    display: flex;
+    flex-direction: column;
+    padding: 14px 20px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.15s ease-in-out;
+    cursor: pointer;
+}
+
+.post-row:hover {
+    background-color: #f8f9fa;
+}
+
+.post-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.post-title {
+    color: #222;
+}
+
+.post-bottom {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    color: #666;
+}
+
+.category-badge {
+    padding: 2px 8px;
+    font-size: 13px;
+    border-radius: 6px;
+    background-color: #eff1f3;
+    color: #333;
+}
+/* ====== 팀 상세 모달 ====== */
+
+.team-board-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.team-board-modal {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 32px 24px;
+    max-width: 460px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    position: relative;
+}
+
+.team-board-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+.team-board-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.team-board-logo img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.team-board-info p {
+    font-size: 15px;
+    color: #374151;
+    margin: 10px 0;
+    word-break: break-word;
+}
+
+.team-board-actions {
+    margin-top: 32px;
+}
+
+.team-join-button {
+    width: 100%;
+    background-color: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 14px 0;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+.team-join-button:hover {
+    background-color: #1d4ed8;
+}
+
+.team-join-button:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* ====== 가입 요청 폼 ====== */
+
+.request-modal-content {
+    text-align: left;
+}
+
+.request-modal-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.request-profile {
+    font-size: 15px;
+    color: #374151;
+    margin-bottom: 12px;
+}
+
+.request-textarea {
+    width: 100%;
+    height: 100px;
+    padding: 14px 16px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    resize: none;
+    margin: 20px 0;
+}
+
+.request-button-row {
+    display: flex;
+    gap: 12px;
+}
+
+.request-cancel-button,
+.request-submit-button {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 0;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.request-cancel-button {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+.request-submit-button {
+    background-color: #2563eb;
+    color: white;
+}
+
+.request-submit-button:hover {
+    background-color: #1d4ed8;
+}
+
+.team-create-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+
+.team-create-modal {
+    background-color: white;
+    border-radius: 10px;
+    padding: 2rem;
+    width: 90vw;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+.team-create-modal h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.team-create-modal input,
+.team-create-modal textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.modal-button-row button {
+    flex: 1;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 8px;
+    margin: 0 4px;
+    cursor: pointer;
+}
+
+.modal-button-row button:last-child {
+    background: #2563eb;
+    color: white;
+}
+
+.modal-button-row button:last-child:hover {
+    background: #1d4ed8;
+}
+
+
+
+
+
+
+.button-blue:hover {
+    background-color: #1d4ed8;
+}
+/* 선택적으로 global.css에 추가할 수 있는 부분 */
+
+.modal-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.modal-input,
+.modal-textarea {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+    font-size: 15px;
+}
+
+.modal-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+
+.team-create-modal {
+    background-color: white;
+    border-radius: 16px;
+    padding: 32px 28px;
+    width: 520px;
+    max-width: 90%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    text-align: left;
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 24px;
+}
+
+.profile-upload-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.profile-image-box {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #f3f4f6;
+    cursor: pointer;
+}
+
+.profile-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.camera-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    font-size: 14px;
+    padding: 4px;
+    transform: translate(20%, 20%);
+}
+
+.team-name-input {
+    flex: 1;
+    font-size: 16px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.modal-label {
+    font-weight: bold;
+    margin: 12px 0 6px;
+    display: block;
+}
+
+.modal-input,
+.modal-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.modal-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+
+
+
+
+.button-blue:hover {
+    background-color: #1d4ed8;
+}
+/* 팀 생성 모달 */
+
+.team-create-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.team-create-modal {
+    background-color: white;
+    border-radius: 20px;
+    padding: 32px 24px;
+    width: 440px;
+    max-width: 95%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.logo-name-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.logo-upload-box {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-upload-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.camera-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 28px;
+    color: rgba(0, 0, 0, 0.5); /* 반투명 검정 */
+    pointer-events: none; /* 클릭 막기 (이미지 클릭에만 반응) */
+}
+
+.team-create-modal input[type="text"],
+.team-create-modal select,
+.team-create-modal textarea {
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.team-name-input {
+    flex: 1;
+}
+
+
+
+
+
+
+
+
+.button-blue:hover {
+    background-color: #1d4ed8;
+}
+/* ===== 팀 생성 모달 (디맨드 스타일) ===== */
+
+.team-create-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.team-create-modal {
+    background-color: white;
+    border-radius: 20px;
+    padding: 32px 24px;
+    width: 480px;
+    max-width: 95%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.logo-name-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.logo-upload-box {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+
+.logo-upload-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.camera-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 16px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 50%;
+    padding: 4px;
+}
+
+/* ===== 입력폼 공통 스타일 ===== */
+
+.modal-label {
+    font-weight: bold;
+    margin: 16px 0 6px;
+    display: block;
+}
+
+.modal-input,
+.modal-select,
+.modal-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 15px;
+    margin-bottom: 16px;
+}
+
+.modal-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* ===== 회원 모집중 라인 정렬 ===== */
+.recruiting-row {
+    margin: 20px 0;
+}
+
+.recruiting-row .modal-label {
+    font-size: 15px;
+    font-weight: bold;
+    color: #1f2937;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;  /* 제목과 체크박스 간의 간격 */
+}
+
+.recruiting-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* ===== 버튼 영역 ===== */
+
+.modal-button-row {
+    display: flex;
+    gap: 12px;
+}
+
+
+
+.button-blue {
+    flex: 1;
+    background-color: #2563eb;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 14px 0;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.button-blue:hover {
+    background-color: #1d4ed8;
+}
+.schedule-row {
+    display: flex;
+    gap: 12px;
+}
+
+.schedule-row select {
+    flex: 1;
+}
+
+.team-board-logo-banner {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 0;
+    margin-bottom: 1rem;
+}
+
+.team-board-logo-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.login-form-box {
+    background: rgba(200, 200, 200, 0.18);
+    padding: 30px 28px;
+    border-radius: 14px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    max-width: 420px;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: -90px; /* 🔹 위로 올림 */
+    transform: translateY(-40px);
+    box-shadow: 0 6px 30px rgba(0,0,0,0.25);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+/* .auth-page .logo { 기존 스타일 제거, 위에서 새로 정의됨 } */
+.auth-form-box {
+    transform: translateY(-14vh); /* 원하는 만큼 -값 조절 (예: -6vh ~ -14vh) */
+    width: 300px; /* 더 작게 */
+    padding: 20px 20px; /* 세로 길이 축소 */
+    background: rgba(255, 255, 255, 0.45); /* 덜 불투명하게 */
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    z-index: 2;
+}
+.auth-form-box h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.auth-form-box .form-group {
+    margin-bottom: 12px;
+}
+
+.auth-form-box label {
+    font-size: 13px;
+    margin-bottom: 4px;
+    display: block;
+}
+.auth-form-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.auth-form-box input {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.auth-form-box .submit-btn {
+    margin-top: 10px;
+    padding: 10px 0;
+    font-size: 14px;
+    border-radius: 8px;
+    background-color: #377dff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.auth-form-box .text-button {
+    margin-top: 10px;
+    font-size: 12px;
+    text-align: center;
+    color: #444;
+    text-decoration: underline;
+}
+.auth-page .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+
+.auth-page .form-group {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.auth-page .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #fff;
+}
+
+.auth-page input,
+.auth-page select {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.auth-page .error {
+    position: absolute;
+    left: 440px; /* input 박스 오른쪽 바깥 */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #f44336;
+    white-space: nowrap;
+    font-weight: 400;
+    text-align: left;
+}
+
+.auth-page .password-hint {
+    font-size: 12px;
+    color: #444;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.auth-page .submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: #4285f4;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.region-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.region-row .custom-region-input {
+    flex: 1;
+    min-width: 0;
+}
+.region-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.region-dropdown,
+.custom-region-input {
+    width: 100%;
+    flex: 1;
+    box-sizing: border-box;
+}
+.logo {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+}
+
+.logo img {
+    height: 32px; /* 또는 40px 등으로 조절 가능 */
+    object-fit: contain;
+}
+
+.header-logo {
+    height: 36px;
+    object-fit: contain;
+}
+
+/* ====== 디맨드 커뮤니티 레이아웃 (MyTeam.vue 등에서 사용) ====== */
+/* 전체 wrapper */
+/*.community-wrapper {*/
+/*    display: flex;*/
+/*    flex-direction: row;*/
+/*    padding: 0 1px;*/
+/*    margin-top: 30px;*/
+/*}*/
+
+
+.community-sidebar .button {
+    padding: 12px 8px;
+    font-size: 15px;
+    background: transparent;
+    border: none;
+    text-align: left;
+    color: #888;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.community-sidebar .button.active {
+    background: #f1f5f9;
+    color: #1d4ed8;
+    font-weight: 700;
+    border-radius: 8px;
+}
+
+/* 메인 콘텐츠 */
+.community-main {
+    flex: 1;
+    margin-left: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.centered-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
+.post-row {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.post-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.category-badge {
+    background: #f1f5f9;
+    color: #555;
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.post-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+}
+
+.post-bottom {
+    margin-top: 8px;
+    display: flex;
+    gap: 14px;
+    font-size: 13px;
+    color: #999;
+}
+
+/* ====== MyTeam.vue 전용 스타일 (접두사 .myteam-) ====== */
+.myteam-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1px 20px;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.myteam-team-top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+}
+
+.myteam-team-logo-box {
+    width: 120px;
+    height: 120px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+.myteam-team-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.myteam-team-info-box {
+    flex: 1;
+    margin-left: 24px;
+}
+
+.myteam-team-name {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.myteam-team-leader,
+.myteam-team-members {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.myteam-team-desc-box {
+    flex-basis: 300px;
+    background: #f9f9f9;
+    border-radius: 16px;
+    padding: 16px;
+    font-size: 14px;
+    color: #444;
+}
+
+.myteam-team-main-section {
+    display: flex;
+    gap: 24px;
+}
+
+.myteam-team-sidebar {
+    width: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.myteam-tab-button {
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 16px;
+    color: #666;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.myteam-tab-button.active {
+    background-color: #f0f4ff;
+    color: #2d6cdf;
+    font-weight: 600;
+}
+
+.myteam-tab-button:hover {
+    background-color: #f7faff;
+}
+
+.myteam-team-main-board {
+    flex: 1;
+    min-height: 400px;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #eee;
+    padding: 24px;
+}
+
+
+/* 팀 상단 정보 */
+.team-header-box {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 24px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 36px;
+}
+
+.logo-and-info {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 500px; /* 고정 너비 */
+    gap: 16px;
+}
+
+.team-logo {
+    width: 167px;
+    height: 167px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    object-fit: cover;
+}
+
+.team-text-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.team-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 11px;
+}
+
+.team-leader,
+.team-member-count {
+    font-size: 15px;
+    color: #666;
+}
+
+.team-description {
+    flex: 1;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.5;
+    min-height: 80px;
+    max-width: 600px;
+    word-break: break-word;
+}
+
+/* 하단 구조 */
+.team-content-box {
+    display: flex;
+    gap: 32px;
+}
+
+/* 좌측 탭 */
+.team-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 0;
+    min-width: 140px;
+    border-right: 1px solid #e5e7eb;
+}
+
+.tab-button {
+
+    border: none !important;
+    all: unset;
+    display: block;
+    width: 80%;
+    padding: 10px 16px;
+    font-size: 15px;
+    color: #374151;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.tab-button:hover {
+    background-color: #f3f4f6;
+    color: #2563eb;
+}
+
+.tab-button.active {
+    background-color: #e0f2fe;
+    font-weight: 600;
+    color: #2563eb;
+}
+
+/* 우측 콘텐츠 */
+.team-panel {
+    flex: 1;
+    min-height: 300px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.member-manage-toolbar {
+    text-align: right;
+    margin-bottom: 12px;
+}
+
+.edit-btn,
+.save-btn {
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+}
+
+.edit-btn {
+    background-color: #e0e7ff;
+    color: #2563eb;
+}
+
+.save-btn {
+    background-color: #f87171;
+    color: white;
+}
+
+.member-manage-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    font-size: 15px;
+}
+
+.member-manage-table th,
+.member-manage-table td {
+    border: 1px solid #e5e7eb;
+    padding: 10px;
+    text-align: center;
+}
+.table-input[type="date"] {
+    width: 130px;
+}
+.table-input,
+.table-select {
+    width: 100px;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+/* .team-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+} */
+
+/* 공통 카드 스타일 */
+/*.team-card {*/
+/*    width: 280px;*/
+/*    height: 360px; !* 고정 높이 *!*/
+/*    padding: 1rem;*/
+/*    box-shadow: 0 2px 8px rgba(0,0,0,0.1);*/
+/*    border-radius: 12px;*/
+/*    background-color: white;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: space-between;*/
+/*    transition: 0.2s ease;*/
+/*}*/
+
+/* 이미지 스타일 */
+.team-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* 팀 만들기 카드 */
+.team-card.create-card {
+    border: 2px dashed #ccc;
+    background-color: #f9f9f9;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.team-card.create-card:hover {
+    background-color: #f1f1f1;
+}
+
+.team-card-content.create-content {
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #555;
+}
+
+@media (max-width: 768px) {
+    .mainboard-page {
+        /*max-width: 800px;*/
+        min-height: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: #fff;
+    }}
+.title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+.selector {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.toggle-add-button {
+    cursor: pointer;
+    padding: 0.6rem 1rem;
+    margin-bottom: 1rem;
+    background: #e0f7fa;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: bold;
+    color: #00796b;
+    transition: background 0.3s;
+}
+.toggle-add-button:hover {
+    background: #b2ebf2;
+}
+.input-box {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    background: #f7f7f7;
+}
+.input-box h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+.input-split {
+    display: flex;
+    gap: 1rem;
+}
+.input-left,
+.input-right {
+    flex: 1;
+}
+.input-left input,
+.input-left select,
+.input-left textarea {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+}
+.member-scroll-box {
+    height: 180px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    background: #fff;
+    border-radius: 4px;
+}
+.member-scroll-box label {
+    display: block;
+    margin-bottom: 0.3rem;
+}
+button {
+    padding: 0.5rem 1rem;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.activity-card {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    background: #fefefe;
+    border-radius: 8px;
+    position: relative;
+}
+.activity-header {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+.activity-meta {
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.activity-memo {
+    font-size: 0.85rem;
+    color: #666;
+}
+.activity-actions {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+}
+.no-activity {
+    text-align: center;
+    color: #aaa;
+    margin-top: 2rem;
+}
+
+.video-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.video-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.upload-form input {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.upload-form button {
+    width: fit-content;
+    padding: 0.5rem 1rem;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.video-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.video-card {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fafafa;
+    padding: 0.5rem;
+}
+
+.thumbnail iframe,
+.thumbnail video {
+    width: 100%;
+    height: 180px;
+    border: none;
+}
+
+.meta {
+    padding: 0.5rem 0;
+}
+
+.meta h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.meta small {
+    color: #666;
+    display: block;
+    margin-top: 0.3rem;
+}
+
+.meta .uploader {
+    font-size: 0.85rem;
+    color: #777;
+}
+
+.delete {
+    margin-top: 0.5rem;
+    background: none;
+    border: none;
+    color: #f44336;
+    cursor: pointer;
+}
+
+.empty {
+    text-align: center;
+    margin-top: 3rem;
+    color: #999;
+}
+.tag-filter {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.tag-filter button {
+    background: #eee;
+    border: none;
+    border-radius: 16px;
+    padding: 0.3rem 0.8rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.tag-filter button.active {
+    background: #333;
+    color: #fff;
+}
+
+.tags {
+    margin-top: 0.5rem;
+}
+
+.tags .tag {
+    display: inline-block;
+    background: #e0f7fa;
+    color: #00796b;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    margin-right: 0.4rem;
+}
+.editor-container {
+    padding-top: 64px;
+}
+
+
+
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+.image-upload {
+    margin: 12px 0;
+}
+.file-label {
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.image-preview {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+.image-preview img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+button.cancel {
+    background: #ddd;
+}
+button:not(.cancel) {
+    background: #000;
+    color: #fff;
+}
+
+/* 진짜 테이블처럼 촘촘하게 */
+.row {
+    display: grid;
+    grid-template-columns: 120px 1fr 140px 160px; /* ⬅ 너비 마음대로 조절 */
+    align-items: center;
+    height: 36px;              /* 낮고 빡빡하게 */
+    padding: 0 10px;
+    column-gap: 12px;
+}
+
+.list-header {
+    height: 34px;
+    font-weight: 600;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fafafa;
+}
+
+.item {
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+    font-size: 14px;           /* 더 촘촘하게 보이게 */
+}
+.item:hover { background: #f9fafb; }
+
+/* ===== Community.vue layout (scoped) ===== */
+.community-wrapper {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    gap: 0px;
+    background-color: #fff;
+}
+.community-main { flex: 1; }
+
+/* ===== Community board grid: 5 columns (checkbox + 4 columns) ===== */
+/* Community board grid: 번호/말머리 타이트, 우측 컬럼은 오른쪽으로 */
+/* Community board grid: 번호/말머리 타이트, 우측 컬럼은 오른쪽으로 */
+.community-board .c-row {
+    display: grid;
+    grid-template-columns: 56px 96px 1fr 120px 120px 72px; /* tighter cafe-like widths */
+    align-items: center;
+    height: 36px;
+    padding-left: 6px;
+    padding-right: 4px;
+    column-gap: 8px;
+}
+
+/* === Alignment utilities for community board === */
+.col-start { justify-self: start; text-align: left; }
+.col-center { justify-self: center; text-align: center; }
+.col-end { justify-self: end; text-align: right; }
+
+/* Keep vertical centering consistent */
+.community-board .c-row { align-items: center; }
+
+/* Sticky header inside scroll area */
+.community-board .sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.community-board .list-header { background: transparent; }
+.community-board .c-item { font-size: 14px; }
+
+/* --- Community board: subject badges & notice rows --- */
+.item.notice { background: #fffbea; }
+.item.notice:hover { background: #fff4c6; }
+
+.subject-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1;
+    border: 1px solid transparent;
+    background: #eef2f7;
+    color: #334155;
+    vertical-align: middle;
+}
+.subject-badge.subject-notice {
+    background: #fef3c7;   /* amber-100 */
+    border-color: #fde68a; /* amber-200 */
+    color: #92400e;        /* amber-700 */
+}
+.subject-badge.subject-event {
+    background: #fff7ed;   /* orange-50 */
+    border-color: #fed7aa; /* orange-200 */
+    color: #9a3412;        /* orange-800 */
+}
+.subject-badge.subject-promo {
+    background: #e0e7ff;   /* indigo-100 */
+    border-color: #c7d2fe; /* indigo-200 */
+    color: #3730a3;        /* indigo-700 */
+}
+.subject-badge.subject-matching {
+    background: #dbeafe;   /* blue-100 */
+    border-color: #bfdbfe; /* blue-200 */
+    color: #1e40af;        /* blue-800 */
+}
+.subject-badge.subject-free {
+    background: #f1f5f9;   /* slate-100 */
+    border-color: #e2e8f0; /* slate-200 */
+    color: #334155;        /* slate-700 */
+}
+
+.c-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.c-date {
+    text-align: right;
+    color: #94a3b8;
+    font-variant-numeric: tabular-nums; /* 숫자 정렬 예쁨 */
+}
+
+.community-board .c-subject {
+    color: #475569;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* --- enforce center alignment on utility-marked cells --- */
+.community-board .c-no.col-center,
+.community-board .c-subject.col-center,
+.community-board .c-nick.col-center,
+.community-board .c-date.col-center,
+.community-board .c-views.col-center,
+.community-board .list-header .col-no.col-center,
+.community-board .list-header .col-subject.col-center,
+.community-board .list-header .col-nick.col-center,
+.community-board .list-header .col-date.col-center,
+.community-board .list-header .col-views.col-center {
+    justify-self: center;
+    text-align: center;
+}
+.c-nick    { color: #64748b; text-align: right; }
+.post-detail {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 16px 20px 40px;
+    color: #111827;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* 헤더 */
+.pd-header {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 14px;
+}
+.pd-title-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 10px;
+}
+.pd-badges { display: flex; gap: 6px; }
+.pd-badge {
+    height: 22px; padding: 0 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    display: inline-flex; align-items: center;
+    background: #eef2ff; color: #4338ca; border: 1px solid #e0e7ff;
+}
+.pd-badge.alt { background:#f0f9ff; color:#0369a1; border-color:#e0f2fe; }
+.pd-badge.ghost { background:#f8fafc; color:#475569; border-color:#eef2f7; }
+.pd-title {
+    margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -.01em;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+
+/* 메타 */
+.pd-meta {
+    display: grid; grid-template-columns: 1fr auto; align-items: center;
+    margin-top: 8px; color: #6b7280;
+}
+.pd-meta-left { display: inline-flex; align-items: center; gap: 6px; }
+.pd-dot { color: #cbd5e1; }
+.pd-meta-right { display: inline-flex; align-items: center; gap: 8px; }
+.pd-meta-chip {
+    font-size: 12px; color:#64748b; background:#f8fafc; border:1px solid #eef2f7;
+    padding: 2px 8px; border-radius: 999px;
+}
+
+/* 본문 */
+.pd-content { padding: 18px 0 10px; }
+.pd-content :where(h1,h2,h3){ margin:18px 0 8px; line-height:1.35; }
+.pd-content p{ margin:8px 0; }
+.pd-content img{ max-width:100%; border-radius:10px; }
+
+/* 액션 */
+.pd-actions {
+    display: grid; grid-template-columns: 1fr auto; align-items: center;
+    gap: 8px; padding: 12px 0 6px;
+}
+.pd-actions-right { display: inline-flex; gap: 8px; }
+.pd-btn {
+    height: 34px; padding: 0 14px; border-radius: 10px; font-weight: 600;
+    border: 1px solid #e5e7eb; background:#f8fafc; color:#0f172a; cursor:pointer;
+}
+.pd-btn:hover { background:#f1f5f9; }
+.pd-btn.ghost { background:transparent; color:#374151; }
+.pd-btn.ghost:hover { background:#f9fafb; }
+.pd-btn.danger { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
+.pd-btn.danger:hover { background:#fecaca; }
+
+.pd-sep { border:none; border-top:1px solid #eef2f7; margin:14px 0 18px; }
+
+/* 반응형 */
+@media (max-width: 720px) {
+    .pd-title { font-size: 18px; }
+    .pd-meta { grid-template-columns: 1fr; row-gap: 6px; }
+    .pd-actions { grid-template-columns: 1fr; }
+    .pd-actions-right { justify-content: flex-end; }
+}
+
+
+/* .auth-page .logo { 기존 스타일 제거, 위에서 새로 정의됨 } */
+.auth-form-box {
+    width: 300px; /* 더 작게 */
+    padding: 20px 20px; /* 세로 길이 축소 */
+    background: rgba(255, 255, 255, 0.45); /* 덜 불투명하게 */
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    z-index: 2;
+}
+.auth-form-box h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.auth-form-box .form-group {
+    margin-bottom: 12px;
+}
+
+.auth-form-box label {
+    font-size: 13px;
+    margin-bottom: 4px;
+    display: block;
+}
+.auth-form-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.auth-form-box input {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.auth-form-box .submit-btn {
+    margin-top: 10px;
+    padding: 10px 0;
+    font-size: 14px;
+    border-radius: 8px;
+    background-color: #377dff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.auth-form-box .text-button {
+    margin-top: 10px;
+    font-size: 12px;
+    text-align: center;
+    color: #444;
+    text-decoration: underline;
+}
+.auth-page .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.auth-page .form {
+    background: rgba(200, 200, 200, 0.18);     /* 밝은 회색 반투명 */
+    padding: 30px;
+    border-radius: 12px;
+    backdrop-filter: blur(6px); /* 배경 흐림 효과 */
+    -webkit-backdrop-filter: blur(6px);
+    max-width: 420px;
+    width: 100%;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    /*border: 1px solid rgba(255, 255, 255, 0.25); !* 경계선 *!*/
+
+}
+.auth-page .form label {
+    color: #fff; /* 글씨 색 흰색 */
+}
+
+.auth-page .form .error {
+    color: #ff7b7b; /* 오류 메시지 색상 */
+}
+
+.auth-page .form input,
+.auth-page .form select {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+}
+
+.auth-page .form input::placeholder {
+    color: rgba(255,255,255,0.6);
+}
+.auth-page .form-group {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.auth-page input,
+.auth-page select {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.auth-page .error {
+    position: absolute;
+    left: 440px; /* input 박스 오른쪽 바깥 */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #f44336;
+    white-space: nowrap;
+    font-weight: 400;
+    text-align: left;
+}
+
+.auth-page .password-hint {
+    font-size: 12px;
+    color: #444;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.auth-page .submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: #4285f4;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.region-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.region-row .custom-region-input {
+    flex: 1;
+    min-width: 0;
+}
+.region-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.region-dropdown,
+.custom-region-input {
+    width: 100%;
+    flex: 1;
+    box-sizing: border-box;
+}
+.logo {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+}
+
+.logo img {
+    height: 32px; /* 또는 40px 등으로 조절 가능 */
+    object-fit: contain;
+}
+
+.header-logo {
+    height: 36px;
+    object-fit: contain;
+}
+
+/* ====== 디맨드 커뮤니티 레이아웃 (MyTeam.vue 등에서 사용) ====== */
+/* 전체 wrapper */
+
+.community-sidebar .button {
+    padding: 12px 8px;
+    font-size: 15px;
+    background: transparent;
+    border: none;
+    text-align: left;
+    color: #888;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.community-sidebar .button.active {
+    background: #f1f5f9;
+    color: #1d4ed8;
+    font-weight: 700;
+    border-radius: 8px;
+}
+
+/* 메인 콘텐츠 */
+.community-main {
+    flex: 1;
+    margin-left: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.centered-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
+.post-row {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.post-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.category-badge {
+    background: #f1f5f9;
+    color: #555;
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.post-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+}
+
+.post-bottom {
+    margin-top: 8px;
+    display: flex;
+    gap: 14px;
+    font-size: 13px;
+    color: #999;
+}
+
+/* ====== MyTeam.vue 전용 스타일 (접두사 .myteam-) ====== */
+
+
+.myteam-team-top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+}
+
+.myteam-team-logo-box {
+    width: 120px;
+    height: 120px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+.myteam-team-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.myteam-team-info-box {
+    flex: 1;
+    margin-left: 24px;
+}
+
+.myteam-team-name {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.myteam-team-leader,
+.myteam-team-members {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.myteam-team-desc-box {
+    flex-basis: 300px;
+    background: #f9f9f9;
+    border-radius: 16px;
+    padding: 16px;
+    font-size: 14px;
+    color: #444;
+}
+
+.myteam-team-main-section {
+    display: flex;
+    gap: 24px;
+}
+
+.myteam-team-sidebar {
+    width: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.myteam-tab-button {
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 16px;
+    color: #666;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.myteam-tab-button.active {
+    background-color: #f0f4ff;
+    color: #2d6cdf;
+    font-weight: 600;
+}
+
+.myteam-tab-button:hover {
+    background-color: #f7faff;
+}
+
+.myteam-team-main-board {
+    flex: 1;
+    min-height: 400px;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #eee;
+    padding: 24px;
+}
+
+
+/* ===== MyTeam.vue Demand 스타일 (디맨드 스타일 전용, 충돌 없음) ===== */
+
+/* 팀 상단 정보 */
+.team-header-box {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 24px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 36px;
+}
+
+.logo-and-info {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 500px; /* 고정 너비 */
+    gap: 16px;
+}
+
+.team-logo {
+    width: 167px;
+    height: 167px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    object-fit: cover;
+}
+
+.team-text-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.team-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 11px;
+}
+
+.team-leader,
+.team-member-count {
+    font-size: 15px;
+    color: #666;
+}
+
+.team-description {
+    flex: 1;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.5;
+    min-height: 80px;
+    max-width: 600px;
+    word-break: break-word;
+}
+
+/* 하단 구조 */
+.team-content-box {
+    display: flex;
+    gap: 32px;
+}
+
+/* 좌측 탭 */
+.team-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 0;
+    min-width: 140px;
+    border-right: 1px solid #e5e7eb;
+}
+
+.tab-button {
+
+    border: none !important;
+    all: unset;
+    display: block;
+    width: 80%;
+    padding: 10px 16px;
+    font-size: 15px;
+    color: #374151;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.tab-button:hover {
+    background-color: #f3f4f6;
+    color: #2563eb;
+}
+
+.tab-button.active {
+    background-color: #e0f2fe;
+    font-weight: 600;
+    color: #2563eb;
+}
+
+/* 우측 콘텐츠 */
+.team-panel {
+    flex: 1;
+    min-height: 300px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.member-manage-toolbar {
+    text-align: right;
+    margin-bottom: 12px;
+}
+
+.edit-btn,
+.save-btn {
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+}
+
+.edit-btn {
+    background-color: #e0e7ff;
+    color: #2563eb;
+}
+
+.save-btn {
+    background-color: #f87171;
+    color: white;
+}
+
+.member-manage-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    font-size: 15px;
+}
+
+.member-manage-table th,
+.member-manage-table td {
+    border: 1px solid #e5e7eb;
+    padding: 10px;
+    text-align: center;
+}
+.table-input[type="date"] {
+    width: 130px;
+}
+.table-input,
+.table-select {
+    width: 100px;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.team-section .team-card-container {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    padding: 32px 0;
+    justify-items: stretch;
+}
+/* 공통 카드 스타일 */
+/*.team-card {*/
+/*    width: 280px;*/
+/*    height: 360px; !* 고정 높이 *!*/
+/*    padding: 1rem;*/
+/*    box-shadow: 0 2px 8px rgba(0,0,0,0.1);*/
+/*    border-radius: 12px;*/
+/*    background-color: white;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: space-between;*/
+/*    transition: 0.2s ease;*/
+/*}*/
+
+/* 이미지 스타일 */
+.team-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* 팀 만들기 카드 */
+.team-card.create-card {
+    border: 2px dashed #ccc;
+    background-color: #f9f9f9;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.team-card.create-card:hover {
+    background-color: #f1f1f1;
+}
+
+.team-card-content.create-content {
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #555;
+}
+
+@media (max-width: 768px) {
+    .mainboard-page {
+        /*max-width: 800px;*/
+        min-height: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: #fff;
+    }}
+.title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+.selector {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.toggle-add-button {
+    cursor: pointer;
+    padding: 0.6rem 1rem;
+    margin-bottom: 1rem;
+    background: #e0f7fa;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: bold;
+    color: #00796b;
+    transition: background 0.3s;
+}
+.toggle-add-button:hover {
+    background: #b2ebf2;
+}
+.input-box {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    background: #f7f7f7;
+}
+.input-box h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+.input-split {
+    display: flex;
+    gap: 1rem;
+}
+.input-left,
+.input-right {
+    flex: 1;
+}
+.input-left input,
+.input-left select,
+.input-left textarea {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+}
+.member-scroll-box {
+    height: 180px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    background: #fff;
+    border-radius: 4px;
+}
+.member-scroll-box label {
+    display: block;
+    margin-bottom: 0.3rem;
+}
+button {
+    padding: 0.5rem 1rem;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.activity-card {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    background: #fefefe;
+    border-radius: 8px;
+    position: relative;
+}
+.activity-header {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+.activity-meta {
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.activity-memo {
+    font-size: 0.85rem;
+    color: #666;
+}
+.activity-actions {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+}
+.no-activity {
+    text-align: center;
+    color: #aaa;
+    margin-top: 2rem;
+}
+
+.video-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.video-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.upload-form input {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.upload-form button {
+    width: fit-content;
+    padding: 0.5rem 1rem;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.video-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.video-card {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fafafa;
+    padding: 0.5rem;
+}
+
+.thumbnail iframe,
+.thumbnail video {
+    width: 100%;
+    height: 180px;
+    border: none;
+}
+
+.meta {
+    padding: 0.5rem 0;
+}
+
+.meta h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.meta small {
+    color: #666;
+    display: block;
+    margin-top: 0.3rem;
+}
+
+.meta .uploader {
+    font-size: 0.85rem;
+    color: #777;
+}
+
+.delete {
+    margin-top: 0.5rem;
+    background: none;
+    border: none;
+    color: #f44336;
+    cursor: pointer;
+}
+
+.empty {
+    text-align: center;
+    margin-top: 3rem;
+    color: #999;
+}
+.tag-filter {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.tag-filter button {
+    background: #eee;
+    border: none;
+    border-radius: 16px;
+    padding: 0.3rem 0.8rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.tag-filter button.active {
+    background: #333;
+    color: #fff;
+}
+
+.tags {
+    margin-top: 0.5rem;
+}
+
+.tags .tag {
+    display: inline-block;
+    background: #e0f7fa;
+    color: #00796b;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    margin-right: 0.4rem;
+}
+.editor-container {
+    padding-top: 64px;
+}
+
+.post-form {
+    padding: 24px;
+    background: #fff;
+    border-radius: 12px;
+    max-width: 700px;
+    margin: auto;
+    font-size: 14px;
+}
+.form-row {
+    display: flex;
+    gap: 12px;
+}
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+.image-upload {
+    margin: 12px 0;
+}
+.file-label {
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.image-preview {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+.image-preview img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+button.cancel {
+    background: #ddd;
+}
+button:not(.cancel) {
+    background: #000;
+    color: #fff;
+}
+
+/* 진짜 테이블처럼 촘촘하게 */
+.row {
+    display: grid;
+    grid-template-columns: 120px 1fr 140px 160px; /* ⬅ 너비 마음대로 조절 */
+    align-items: center;
+    height: 36px;              /* 낮고 빡빡하게 */
+    padding: 0 10px;
+    column-gap: 12px;
+}
+
+.list-header {
+    height: 34px;
+    font-weight: 600;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fafafa;
+}
+
+.item {
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+    font-size: 14px;           /* 더 촘촘하게 보이게 */
+}
+.item:hover { background: #f9fafb; }
+
+.c-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.c-date {
+    text-align: right;
+    color: #94a3b8;
+    font-variant-numeric: tabular-nums; /* 숫자 정렬 예쁨 */
+}
+
+.c-subject { color: #475569; }
+.c-nick    { color: #64748b; }
+.post-detail {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 16px 20px 40px;
+    color: #111827;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* 헤더 */
+.pd-header {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 14px;
+}
+.pd-title-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 10px;
+}
+.pd-badges { display: flex; gap: 6px; }
+.pd-badge {
+    height: 22px; padding: 0 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    display: inline-flex; align-items: center;
+    background: #eef2ff; color: #4338ca; border: 1px solid #e0e7ff;
+}
+.pd-badge.alt { background:#f0f9ff; color:#0369a1; border-color:#e0f2fe; }
+.pd-badge.ghost { background:#f8fafc; color:#475569; border-color:#eef2f7; }
+.pd-title {
+    margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -.01em;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+
+/* 메타 */
+.pd-meta {
+    display: grid; grid-template-columns: 1fr auto; align-items: center;
+    margin-top: 8px; color: #6b7280;
+}
+.pd-meta-left { display: inline-flex; align-items: center; gap: 6px; }
+.pd-dot { color: #cbd5e1; }
+.pd-meta-right { display: inline-flex; align-items: center; gap: 8px; }
+.pd-meta-chip {
+    font-size: 12px; color:#64748b; background:#f8fafc; border:1px solid #eef2f7;
+    padding: 2px 8px; border-radius: 999px;
+}
+
+/* 본문 */
+.pd-content { padding: 18px 0 10px; }
+.pd-content :where(h1,h2,h3){ margin:18px 0 8px; line-height:1.35; }
+.pd-content p{ margin:8px 0; }
+.pd-content img{ max-width:100%; border-radius:10px; }
+
+/* 액션 */
+.pd-actions {
+    display: grid; grid-template-columns: 1fr auto; align-items: center;
+    gap: 8px; padding: 12px 0 6px;
+}
+.pd-actions-right { display: inline-flex; gap: 8px; }
+.pd-btn {
+    height: 34px; padding: 0 14px; border-radius: 10px; font-weight: 600;
+    border: 1px solid #e5e7eb; background:#f8fafc; color:#0f172a; cursor:pointer;
+}
+.pd-btn:hover { background:#f1f5f9; }
+.pd-btn.ghost { background:transparent; color:#374151; }
+.pd-btn.ghost:hover { background:#f9fafb; }
+.pd-btn.danger { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
+.pd-btn.danger:hover { background:#fecaca; }
+
+.pd-sep { border:none; border-top:1px solid #eef2f7; margin:14px 0 18px; }
+
+/* 반응형 */
+@media (max-width: 720px) {
+    .pd-title { font-size: 18px; }
+    .pd-meta { grid-template-columns: 1fr; row-gap: 6px; }
+    .pd-actions { grid-template-columns: 1fr; }
+    .pd-actions-right { justify-content: flex-end; }
+}
+/* 폼 영역 폭/배치 */
+.register-page .register-stepper .outer-container,
+.register-page .outer-container {
+    width: min(720px, 92vw);
+    margin: 24px auto 0;
+}
+
+/* 헤더 타이틀 위치 */
+.register-page .title {
+    color: #fff;
+    font-weight: 800;
+    font-size: clamp(20px, 3vw, 28px);
+    margin: 16px 0 12px;
+    text-align: center;
+}
+
+/* 스텝 인디케이터 줄 정렬 */
+.step-indicator-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 18px;
+}
+
+/* 내용 카드 느낌 (유리 효과 선택) */
+.step-content-default {
+    background: rgba(18, 18, 18, 0.55);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 6px 18px 0;
+}
+
+/* 하단 버튼 영역 */
+.footer-container { padding: 14px 18px 20px; }
+.footer-nav { display: flex; gap: 10px; }
+.footer-nav.end { justify-content: flex-end; }
+.footer-nav.spread { justify-content: space-between; }
+
+/* 버튼 룩 앤 필 */
+.next-button,
+.back-button {
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    font-weight: 600;
+    transition: transform .08s ease, opacity .2s;
+}
+.next-button {
+    background: #5227FF;
+    color: #fff;
+}
+.next-button:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+.back-button {
+    background: rgba(255,255,255,0.06);
+    color: #e4e8ef;
+}
+
+/* 폼 정리 */
+.form .form-group { margin-bottom: 14px; color: #cfd3d8; }
+.form label { display:block; margin: 4px 0 8px; font-size: 14px; color:#cfd3d8; }
+.input-wrap { position: relative; }
+.input-wrap input,
+.form select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: #fff;
+    color: #111;
+}
+.error {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #ff5a5a;
+}
+.password-hint, .final-hint { color:#9aa1a9; }
+
+/* Stepper 기본 클래스가 없으면(혹은 다르게 돼 있으면) 최소한의 원형/선 스타일 */
+.step-indicator { cursor: pointer; }
+.step-indicator-inner {
+    width: 28px; height: 28px; border-radius: 999px; display:flex;
+    align-items:center; justify-content:center;
+}
+.step-connector { flex: 1; height: 2px; background: transparent; }
+.step-connector-inner { height: 100%; border-radius: 1px; }
+.step-number { font-size: 12px; color: #111; }
+.active-dot { width: 10px; height: 10px; border-radius: 999px; background:#fff; }
+
+/* ===== MemberManage modern table (screenshot-like) ===== */
+.member-manage-table.modern {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+.member-manage-table.modern th,
+.member-manage-table.modern td {
+    border: none; /* remove 1px cell borders from base table rules */
+}
+.member-manage-table.modern thead th {
+    background: transparent;
+    color: #6b7280;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb; /* keep only bottom border for header */
+}
+.member-manage-table.modern tbody td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9; /* keep only row separators */
+    vertical-align: middle;
+}
+.member-manage-table.modern tbody tr:hover {
+    background-color: #f9fafb;
+}
+.member-manage-table.modern .name-cell strong {
+    font-weight: 700;
+    color: #111827;
+}
+.member-manage-table.modern .cell-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.member-manage-table.modern .mono { font-variant-numeric: tabular-nums; color:#374151; }
+/* Pills */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 10px;
+    font-size: 12px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    line-height: 1;
+}
+.badge-success {
+    background: #ecfdf5;
+    color: #059669;
+    border-color: #a7f3d0;
+}
+.badge-ghost {
+    background: #f8fafc;
+    color: #475569;
+    border-color: #e2e8f0;
+}
+/* Icon buttons and icons (tighter for modern table) */
+.member-manage-table.modern .icon-btn {
+    background: transparent !important;
+    border: 1px solid transparent;
+    padding: 4px 6px;
+    border-radius: 8px;
+    color: #374151;
+}
+.member-manage-table.modern .icon {
+    width: 14px;
+    height: 14px;
+}
+/* Icon buttons: subtle by default, visible on hover */
+.icon-btn { border-color: transparent; }
+.member-manage-table.modern .icon-btn:hover {
+    background-color: #f3f4f6;
+    border-color: #e5e7eb;
+}
+.icon-btn.success { border-color:#86efac; }
+.icon-btn.danger { border-color:#fecaca; }
+
+.member-manage-table.modern .icon-btn:focus,
+    /*.member-manage-table.modern .icon-btn:f<truncated__content/>*/
+
+    /* ===== FINAL OVERRIDES: enforce 'modern' table look ===== */
+table.member-manage-table.modern thead th {
+    background: transparent !important;
+    color: #6b7280 !important;
+    font-weight: 600 !important;
+    text-align: left !important;
+    padding: 8px 10px !important;
+    border-bottom: 1px solid #e5e7eb !important;
+}
+table.member-manage-table.modern th,
+table.member-manage-table.modern td {
+    border: 0 !important;
+}
+table.member-manage-table.modern tbody td {
+    padding: 8px 10px !important;
+    text-align: left !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    vertical-align: middle !important;
+}
+table.member-manage-table.modern tbody tr:hover {
+    background-color: #f9fafb !important;
+}
+.member-manage-table.modern .icon-btn {
+    background: transparent !important;
+    border-color: transparent !important;
+}
+.member-manage-table.modern .icon-btn:hover {
+    background-color: #f3f4f6 !important;
+    border-color: #e5e7eb !important;
+}
+
+.member-manage-table.modern .actions-cell {
+    width: auto !important; /* keep equal distribution */
+    text-align: center !important;
+    white-space: nowrap !important;
+}
+
+/* ===== MonthlyAttendanceView (scoped to .attendance-page) ===== */
+.attendance-page .title {
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+}
+.attendance-page .selector {
+    gap: 8px;
+    margin-bottom: 12px;
+}
+.attendance-page .selector select {
+    height: 36px;
+    padding: 6px 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    color: #111827;
+    font-size: 14px;
+}
+.attendance-page .toggle-add-button {
+    background: transparent;
+    border: 1px solid #e5e7eb;
+    color: #374151;
+    border-radius: 8px;
+    padding: 8px 12px;
+    text-align: center;
+    font-weight: 600;
+}
+.attendance-page .toggle-add-button:hover {
+    background: #f3f4f6;
+}
+.attendance-page .input-box {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+}
+.attendance-page .member-scroll-box {
+    border-color: #e5e7eb;
+}
+.attendance-page .no-activity {
+    color: #9ca3af;
+    font-size: 14px;
+    padding: 24px 0;
+}
+/* ===== MonthlyAttendanceView: compact form & aligned grid ===== */
+.attendance-page .input-box {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 12px;
+}
+.attendance-page .input-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items: start; /* 오른쪽 참석자 박스와 상단 정렬 일치 */
+}
+/* 좌측 필드: 높이/보더/라운드 일관화 */
+.attendance-page .input-left input[type="date"],
+.attendance-page .input-left input[type="text"],
+.attendance-page .input-left select,
+.attendance-page .input-left textarea {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #111827;
+}
+.attendance-page .input-left input[type="date"],
+.attendance-page .input-left input[type="text"],
+.attendance-page .input-left select {
+    height: 38px;
+    padding: 8px 10px;
+}
+.attendance-page .input-left textarea {
+    min-height: 88px;
+    padding: 10px 12px;
+    resize: vertical;
+}
+/* 우측 참석자 스크롤 박스: 카드 느낌 + 내부 라인 */
+.attendance-page .member-scroll-box {
+    height: 208px; /* 왼쪽 필드 높이와 균형 잡힌 값 */
+    overflow-y: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: #fff;
+}
+.attendance-page .member-scroll-box label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #374151;
+    font-size: 14px;
+}
+.attendance-page .member-scroll-box label:last-child {
+    border-bottom: none;
+}
+.attendance-page .member-scroll-box input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #2563eb; /* 지원 브라우저에서 체크 색상 */
+}
+/* 저장 버튼: 좌상단 정렬 + 명확한 프라이머리 버튼 */
+.attendance-page .input-box > button {
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #fff;
+    border: 1px solid #1d4ed8;
+    font-weight: 600;
+}
+.attendance-page .input-box > button:hover {
+    background: #1d4ed8;
+}
+/* 상단 선택기/토글 버튼 간격을 더 촘촘하게 */
+.attendance-page .selector { margin-bottom: 10px; }
+.attendance-page .toggle-add-button { margin: 8px 0 12px; }
+
+
+
+/* === MemberManage modern table: 5 equal columns + narrow Actions === */
+/* Actions 고정폭(우측 아이콘 영역) */
+table.member-manage-table.modern col.w-actions {
+    width: 72px !important;   /* 아이콘 1개 기준 충분한 폭 */
+    min-width: 60px;
+}
+/* === MemberManage modern table: 6 equal columns (including Actions) === */
+table.member-manage-table.modern col.w-no,
+table.member-manage-table.modern col.w-name,
+table.member-manage-table.modern col.w-pos,
+table.member-manage-table.modern col.w-draft,
+table.member-manage-table.modern col.w-date,
+table.member-manage-table.modern col.w-actions {
+    width: calc(100% / 6) !important; /* 1:1:1:1:1:1 */
+    min-width: 120px;
+}
+
+
+/* Alignment utilities (header + body) */
+table.member-manage-table.modern th.t-start,
+table.member-manage-table.modern td.t-start { text-align: left !important; }
+table.member-manage-table.modern th.t-center,
+table.member-manage-table.modern td.t-center { text-align: center !important; }
+table.member-manage-table.modern th.t-end,
+table.member-manage-table.modern td.t-end { text-align: right !important; }
+
+/* If a cell wraps content in .cell-wrap (flex), sync horizontal alignment */
+table.member-manage-table.modern td.t-center .cell-wrap { justify-content: center; }
+table.member-manage-table.modern td.t-end .cell-wrap    { justify-content: flex-end; }
+table.member-manage-table.modern td.t-start .cell-wrap  { justify-content: flex-start; }
+
+/* Compact row height parity (visual density similar to community) */
+table.member-manage-table.modern thead th { padding-left: 10px !important; padding-right: 10px !important; }
+table.member-manage-table.modern tbody td { padding-left: 10px !important; padding-right: 10px !important; }
+
+
+/* ===== Community Top Toolbar (검색 + 상태탭 + 글쓰기) ===== */
+.top-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.top-toolbar .search-box {
+    flex: 1 1 auto;
+    max-width: 720px;
+}
+
+.top-toolbar .keyword-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 14px;
+    background: #fff;
+}
+
+.top-toolbar .keyword-input::placeholder {
+    color: #9ca3af;
+}
+
+.top-toolbar .right-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.top-toolbar .status-tabs {
+    display: inline-flex;
+    gap: 8px;
+    margin-right: 6px;
+}
+
+.top-toolbar .status-tabs .tab {
+    height: 36px;
+    padding: 0 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    background: #f8fafc;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.top-toolbar .status-tabs .tab.active {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+}
+
+/* 글쓰기 버튼이 전역에 없다면 가벼운 버튼 룩 추가 */
+.top-toolbar .write-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 10px;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 700;
+}
+.top-toolbar .write-button:hover {
+    background: #1d4ed8;
+}
