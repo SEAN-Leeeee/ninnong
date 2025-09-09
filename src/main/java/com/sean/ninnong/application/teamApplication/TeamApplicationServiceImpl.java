@@ -2,31 +2,38 @@ package com.sean.ninnong.application.teamApplication;
 
 
 import com.sean.ninnong.application.dto.ApplicationRequest;
+import com.sean.ninnong.application.dto.ApplicationResponse;
 import com.sean.ninnong.common.enums.ApplicationStatus;
 import com.sean.ninnong.exception.ApplicationNotFoundException;
-import com.sean.ninnong.team.TeamRepository;
 import com.sean.ninnong.member.MemberService;
 import com.sean.ninnong.member.dto.TeamMemberRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamApplicationServiceImpl implements TeamApplicationService{
 
     private final TeamApplicationRepository teamApplicationRepository;
-    private final TeamRepository teamRepository;
     private final MemberService memberService;
 
-    public TeamApplication findTeamApplication(Long teamId, Long applicantId) {
-        return teamApplicationRepository.findByTeamIdAndUserIdAndStatus(teamId, applicantId, ApplicationStatus.PENDING)
+    public TeamApplication findApplication(Long teamId, Long applicantId) {
+        return teamApplicationRepository.findByTeamIdAndApplicantAndStatus(teamId, applicantId, ApplicationStatus.PENDING)
                 .orElseThrow(() -> new ApplicationNotFoundException(applicantId));
     }
-    public TeamApplicationServiceImpl(TeamApplicationRepository teamApplicationRepository, TeamRepository teamRepository, MemberService memberService) {
+    public TeamApplicationServiceImpl(TeamApplicationRepository teamApplicationRepository, MemberService memberService) {
         this.teamApplicationRepository = teamApplicationRepository;
-        this.teamRepository = teamRepository;
         this.memberService = memberService;
+    }
+    // ----------------------------------------------------------------------------------------
+    @Override
+    public ApplicationResponse findMyApplication(Long applicationId) {
+        return teamApplicationRepository
+                .findByApplicantAndStatus(applicationId, ApplicationStatus.PENDING)
+                .map(TeamApplication::toResponse)
+                .orElse(ApplicationResponse.empty());
     }
 
     @Override
@@ -36,38 +43,33 @@ public class TeamApplicationServiceImpl implements TeamApplicationService{
         // 지원을 하고있지 않아야함
         TeamApplication application = TeamApplication.of(teamId, request, applicationId);
         teamApplicationRepository.save(application);
+
     }
 
     @Override
     @Transactional
-    public void respondTo(Long teamId, Long applicationId, ApplicationStatus decision) {
-        TeamApplication application = findTeamApplication(teamId, applicationId);
-        application.applyDecision(decision);
-
-        if (decision == ApplicationStatus.ACCEPT) {
-            TeamMemberRequest request = application.toTeamMemberRequest();
-            memberService.of(application.getTeamId(), request.getUserId());
-        }
-    }
-
-    @Override
-    public List<TeamApplication> getApplicationList(Long id) {
-        return teamApplicationRepository.findAll();
-    }
-
-    @Override
-    @Transactional
-    public void cancelApplication(Long teamId, Long applicantId) {
-        TeamApplication application = findTeamApplication(teamId, applicantId);
+    public void cancelApply(Long teamId, Long applicantId) {
+        TeamApplication application = findApplication(teamId, applicantId);
         application.cancelApply();
     }
 
     @Override
-    public Long getPendingApplicationTeamIdByUserId(Long applicationId) {
-         return teamApplicationRepository
-                 .findByUserIdAndStatus(applicationId, ApplicationStatus.PENDING)
-                 .map(TeamApplication::getTeamId)
-                 .orElse(0L);
+    public List<ApplicationResponse> getTeamApplications(Long teamId) {
+        return teamApplicationRepository.findByTeamIdAndStatus(teamId, ApplicationStatus.PENDING)
+                .stream()
+                .map(TeamApplication::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void responseTo(Long teamId, ApplicationDecisionRequest request, Long charge) {
+        TeamApplication application = findApplication(teamId, request.getApplicant());
+        application.applyDecision(request, charge);
+
+        if (request.getDecision() == ApplicationStatus.ACCEPT) {
+            memberService.add(application.getTeamId(), request.getApplicant());
+        }
     }
 
 

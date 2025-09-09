@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface MemberService {
 
-    Member of(Long teamId, Long userId);
+    Member add(Long teamId, Long userId);
 
     List<MemberInfo> getMemberList(Long teamId);
 

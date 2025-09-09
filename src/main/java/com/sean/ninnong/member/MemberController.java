@@ -23,7 +23,7 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<MemberResponseMsg> create(@RequestBody TeamMemberRequest request) {
-        memberService.of(request.getTeamId(), request.getUserId());
+        memberService.add(request.getTeamId(), request.getUserId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(MemberResponseMsg.addFrom(request.getUserId()));
     }

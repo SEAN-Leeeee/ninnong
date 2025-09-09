@@ -6,6 +6,8 @@ import lombok.Getter;
 @Getter
 public class ApplicationDecisionRequest {
 
-    public Long applicantId;
+    public Long applicant;
     public ApplicationStatus decision;
+
+    public String responseMsg;
 }

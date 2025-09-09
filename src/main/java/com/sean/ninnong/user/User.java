@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @Table (
-        name="user",
+        name="users",
         indexes={
             @Index(name = "idx_user_nickname_active", columnList = "nickname, active_flag"),
             @Index(name = "idx_user_email_active", columnList = "email, active_flag")

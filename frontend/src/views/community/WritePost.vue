@@ -75,9 +75,6 @@ export default {
         MATCHING: '매치'
       },
       subjectMap: {
-        FREE: [
-          {value: 'FREE', label: '자유'}
-        ],
         PROMO: [
           { value: 'CONTEST', label: '대회' },
           { value: 'EVENT',   label: '이벤트' }
@@ -122,7 +119,7 @@ export default {
 
         const res = await api.post('/posts', {
           category: this.category,
-          subject: this.subject,
+          subject:  this.category == 'FREE' ? 'FREE' : this.subject,
           title: this.title,
           content: finalContent,
           imageUrls: imageList

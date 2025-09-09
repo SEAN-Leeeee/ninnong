@@ -42,7 +42,6 @@
         <div class="team-card-content">
           <h3>{{ team.name }}</h3>
           <p>지역 {{ team.region }}</p>
-          <p>인원 {{ team.memberCount }}</p>
           <p>모임 일정 {{ team.meetingDay }}</p>
           <p>회비 {{ team.membershipFee.toLocaleString() }}</p>
           <p v-if="team.isRecruitingMembers">회원 모집중</p>
@@ -56,7 +55,8 @@
         v-if="showModal && selectedTeam"
         :team="selectedTeam"
         @close="showModal = false"
-        :applicationTeamId="applicationTeamId"
+        :application-team-id="myApplication.teamId"
+        @application-request="checkMyApplication"
     />
 
     <TeamCreateModal
@@ -89,10 +89,10 @@ export default {
       selectedLocation: "",
       filterRecruiting: false,
       showModal: false,
-      selectedTeam: null,
+      selectedTeam: {},
       showCreateModal: false,
       teams: [],
-      applicationTeamId: 0
+      myApplication: {}
     };
   },
   mounted() {
@@ -101,7 +101,7 @@ export default {
   },
   computed: {
     isNotInTeam() {
-      return (this.user?.teamId ?? 0) === 0 && this.applicationTeamId === 0;
+      return (this.user?.teamId ?? 0) === 0 && this.myApplication.teamId === 0;
     },
     user() {
       const userStore = useUserStore()
@@ -124,11 +124,12 @@ export default {
     },
   },
   methods: {
-
     async checkMyApplication() {
       try {
         const res = await api.get('/teamApplication/mine');
-        this.applicationTeamId = res.data.id;
+        this.myApplication = res.data;
+        console.log("myApplication");
+        console.log(res.data);
       }  catch (err) {
         const msg = err.response?.data?.message || '오류가 발생했습니다. 관리자에게 문의하세요';
         alert(msg);

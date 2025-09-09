@@ -1,17 +1,21 @@
 package com.sean.ninnong.application.teamApplication;
 
 import com.sean.ninnong.application.dto.ApplicationRequest;
+import com.sean.ninnong.application.dto.ApplicationResponse;
 import com.sean.ninnong.common.enums.ApplicationStatus;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface TeamApplicationService {
     void applyWith(Long teamId, ApplicationRequest request, Long applicationId);
 
-    void respondTo(Long teamId, Long applicationId, ApplicationStatus decision);
+    void cancelApply(Long teamId, Long applicationId);
 
-    List<TeamApplication> getApplicationList(Long id);
-    void cancelApplication(Long teamId, Long applicationId);
+    ApplicationResponse findMyApplication(Long applicationId);
 
-    Long getPendingApplicationTeamIdByUserId(Long applicationId);
+    List<ApplicationResponse> getTeamApplications(Long teamId);
+
+    @Transactional
+    void responseTo(Long teamId, ApplicationDecisionRequest request, Long charge);
 }

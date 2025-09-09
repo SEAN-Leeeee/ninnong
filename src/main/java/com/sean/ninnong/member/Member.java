@@ -49,7 +49,7 @@ public class Member {
         this.deletedAt = null;
     }
 
-    public static Member of(Long teamId, Long userId) {
+    public static Member create(Long teamId, Long userId) {
         return new Member(teamId, userId);
     }
 

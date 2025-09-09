@@ -88,7 +88,7 @@
 
       <div class="modal-button-row">
         <button class="button-grey" @click="$emit('close')">취소</button>
-        <button class="button-blue" @click="submit" :disabled="isUploadingLogo">
+        <button class="button-blue" @click="submit" :disabled="isUploadingLogo || isNotFilled">
           {{ isUploadingLogo ? '업로드 중...' : '등록' }}
         </button>
       </div>
@@ -136,6 +136,12 @@ export default {
       const userStore = useUserStore()
       return userStore.currentUser
     },
+    isNotFilled() {
+      return Object.entries(this.newTeamInfo).some(([key, value]) => {
+        if (key === 'logo' || key === 'meetingDay') return false;
+        return value === '' || value === null || value === undefined;
+      });
+    },
   },
   watch: {
     selectedRegion(newVal) {
@@ -147,8 +153,6 @@ export default {
       }
     },
     customRegion(newVal) {
-      console.log(newVal)
-
       if (this.selectedRegion === 'custom') {
         this.newTeamInfo.region = newVal
       }
@@ -258,13 +262,16 @@ export default {
       this.sanitizeDescription()
       try {
         this.newTeamInfo.meetingDay = this.day + ' ' + this.time
-
         const res = await api.post('/teams', this.newTeamInfo)
+
         if (this.customRegion !== '') {
           await this.updateRegion(this.newTeamInfo.region)
         }
+
         this.user.teamId = res.data.id;
+
         alert("팀이 생성되었습니다!");
+
         this.$emit('create')
         this.$emit('close')
       } catch (err) {

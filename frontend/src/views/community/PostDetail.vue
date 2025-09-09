@@ -1,36 +1,33 @@
 <template>
   <div class="post-detail">
-    <!-- 헤더 -->
     <div class="pd-header">
       <div class="pd-title-row">
         <div class="pd-badges">
-          <span v-if="post.category1" class="pd-badge"># {{ post.category1 }}</span>
-          <span v-if="post.category2" class="pd-badge alt"># {{ post.category2 }}</span>
-          <span v-if="post.subject" class="pd-badge ghost"># {{ post.subject }}</span>
+          <span class="subject-badge" :class="subjectClass(post.subject)">
+                  {{ subjectLabel(post.subject) }}
+                </span>
         </div>
-        <h1 class="pd-title" :title="post.title">{{ post.title || '제목 없음' }}</h1>
+        <h1 class="pd-title" :title="post.title">{{ post.title}}</h1>
       </div>
 
       <div class="pd-meta">
         <div class="pd-meta-left">
-          <span class="pd-writer">{{ post.nickname || '익명' }}</span>
+          <span class="pd-writer">{{ post.nickname}}</span>
           <span class="pd-dot">·</span>
           <time class="pd-date">{{ formatDate(post.createdAt) }}</time>
         </div>
-        <div class="pd-meta-right">
-          <span class="pd-meta-chip">조회 {{ num(post.views) }}</span>
-          <span class="pd-meta-chip">댓글 {{ num(post.commentCount) }}</span>
-        </div>
+<!--        <div class="pd-meta-right">-->
+<!--          <span class="pd-meta-chip">조회 {{ num(post.views) }}</span>-->
+<!--          <span class="pd-meta-chip">댓글 {{ num(post.commentCount) }}</span>-->
+<!--        </div>-->
       </div>
     </div>
 
-    <!-- 본문 -->
     <div class="pd-content" v-html="contentHtml"></div>
 
-    <!-- 액션 -->
     <div class="pd-actions">
-      <button class="pd-btn ghost" @click="goBack">목록</button>
       <div class="pd-actions-right">
+        <button class="pd-btn back-btn" @click="goBack">목록</button>
         <button class="pd-btn" @click="editPost">수정</button>
         <button class="pd-btn danger" @click="deletePost">삭제</button>
       </div>
@@ -38,10 +35,8 @@
 
     <hr class="pd-sep" />
 
-    <!-- 댓글 -->
     <CommentSection
         :comments="post.comments"
-        :currentUser="currentUser"
         @reply-submitted="addReply"
         @comment-added="addComment"
         @comment-deleted="deleteComment"
@@ -60,45 +55,22 @@ export default {
   components: { CommentSection },
   data() {
     return {
-      currentUser: '이셔니',
-      post: {
-        id          : null,
-        title       : '',
-        writer      : '',
-        nickname    : '',
-        subject     : '',
-        content     : '',
-        category1   : '',
-        category2   : '',
-        createdAt   : '',
-        views       : 0,
-        commentCount: 0,
-        comments    : []
-      }
+      post: {},
+      subjectMap: {
+        PROMO: [
+          { value: 'CONTEST', label: '대회' },
+          { value: 'EVENT',   label: '이벤트' }
+        ],
+        MATCHING: [
+          { value: 'MATCH', label: '교류전' },
+          { value: 'GUEST',      label: '게스트' }
+        ],
+        FREE: [{ value: 'FREE', label: '자유' }]
+      },
     }
   },
   async mounted() {
-    const id = this.$route.params.id
-    try {
-      // 실제 API 형식에 맞춰 필드 매핑
-      const { data } = await api.get(`/posts/${id}`)
-      this.post = {
-        id: data.id,
-        title: data.title,
-        writer: data.writer,
-        nickname: data.nickname,
-        subject: data.subject,
-        content: data.content,
-        category1: data.category,
-        createdAt: data.createdAt,
-        // views: data.views ?? 0,
-        // commentCount: data.commentCount ?? (data.comments?.length || 0),
-        // comments: data.comments ?? []
-      }
-      console.log(data)
-    } catch (e) {
-      console.error(e)
-    }
+    this.initPost();
   },
   computed: {
     // 콘텐츠 내부의 상대 경로(/api/uploads, /uploads 등)을 절대 URL로 변환해서 표시
@@ -107,6 +79,15 @@ export default {
     }
   },
   methods: {
+    async initPost() {
+      const id = this.$route.params.id;
+      try {
+        const res = await api.get(`/posts/${id}`)
+        this.post = res.data
+      } catch (e) {
+        console.error(e)
+      }
+    },
     formatDate(v) {
       if (!v) return ''
       const d = new Date(v)
@@ -157,7 +138,28 @@ export default {
       this.post.commentCount = Math.max(0, this.post.commentCount - 1)
     },
 
-    // ===== URL 보정: 여기만 추가/수정 =====
+    subjectLabel(subj) {
+      const s = (subj || '').toString();
+
+      const upper = s.toUpperCase();
+      const label = this.codeToLabel(upper);
+      return label || s;
+    },
+    subjectClass(subj) {
+      const s = (subj || '').toString().toLowerCase();
+      if (s.includes('event')) return 'subject-event';
+      if (s.includes('guest')) return 'subject-guest';
+      if (s.includes('contest')) return 'subject-promo';
+      if (s.includes('match')) return 'subject-matching';
+      return 'subject-free';
+    },
+    codeToLabel(code) {
+      for (const arr of Object.values(this.subjectMap)) {
+        const found = (arr || []).find(o => o.value === code);
+        if (found) return found.label;
+      }
+      return '';
+    },
     rewriteRelativeMedia(html) {
       if (!html) return ''
       const wrapper = document.createElement('div')
@@ -192,7 +194,6 @@ export default {
 
       return wrapper.innerHTML
     }
-    // ===== URL 보정 끝 =====
   }
 }
 </script>

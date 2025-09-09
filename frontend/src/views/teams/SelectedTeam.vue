@@ -21,11 +21,19 @@
       <!-- 버튼 -->
       <div class="team-board-actions" v-if="showRequestBox" >
         <button
+            v-show="applicationTeamId == 0"
             class="team-join-button"
             :disabled="requestSent"
             @click="openRequestModal"
         >
-          {{ requestSent ? '요청 대기중' : '가입 요청' }}
+          가입 요청
+        </button>
+        <button
+            v-show="applicationTeamId == team.id"
+            class="team-join-button"
+            @click="cancelJoinRequest"
+        >
+          가입 요청 취소
         </button>
       </div>
 
@@ -50,7 +58,7 @@
 
           <div class="request-button-row">
             <button class="request-cancel-button" @click="showRequestModal = false">취소</button>
-            <button class="request-submit-button" @click="submitRequest">요청</button>
+            <button class="request-submit-button" @click="submitJoinRequest">요청</button>
           </div>
 
         </div>
@@ -72,9 +80,10 @@ export default {
       type: Object,
       required: true,
     },
-    applicationTeamId: Number
+    applicationTeamId: Number,
 
   },
+  emits: ['close', 'application-request'],
   data() {
     return {
       showRequestModal: false,
@@ -95,7 +104,7 @@ export default {
       return userStore.currentUser
     },
     showRequestBox() {
-      return this.team.isRecruitingMembers && this.applicationTeamId === 0 && this.user.teamId ===0;
+      return this.team.isRecruitingMembers && this.user.teamId ===0;
     },
   },
   methods: {
@@ -108,14 +117,16 @@ export default {
     openRequestModal() {
       this.showRequestModal = true
     },
-    async submitRequest() {
+    async submitJoinRequest() {
       const applicationRequest = {
         userName: this.user.name,
         draftLevel : this.user.draftLevel,
         requestMsg : this.requestMsg
       }
       try {
-        await api.post('/teamApplication/{teamId}', applicationRequest);
+        const res = await api.post(`/teamApplication/${this.team.id}`, applicationRequest);
+        console.log(res.data)
+        this.$emit('application-request');
       }  catch (err) {
         const msg = err.response?.data?.message || '오류가 발생했습니다. 관리자에게 문의하세요';
         alert(msg);
@@ -123,7 +134,18 @@ export default {
 
       this.requestSent = true
       this.showRequestModal = false
-    }
+    },
+    async cancelJoinRequest() {
+      try {
+        await api.delete(`/teamApplication/${this.team.id}`);
+        this.$emit('application-request');
+
+      } catch (err) {
+        const msg = err.response?.data?.message || '오류가 발생했습니다. 관리자에게 문의하세요';
+        alert(msg);
+      }
+
+    },
   }
 }
 </script>

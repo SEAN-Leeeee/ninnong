@@ -1,4 +1,3 @@
-<!-- src/components/CommentSection.vue -->
 <template>
   <div class="comment-wrapper">
     <h3 class="comment-count">댓글 {{ comments.length }}</h3>
@@ -13,43 +12,53 @@
         :key="comment.id"
         :comment="comment"
         :depth="0"
-        :currentUser="currentUser"
         @reply-submitted="emitReply"
         @comment-deleted="emitDelete"
     />
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script>
 import CommentItem from './CommentItem.vue'
+import { useUserStore } from '@stores/user.js'
+import api from "@/axios.js";
 
-const props = defineProps({
-  comments: Array,
-  currentUser: String
-})
-const emit = defineEmits(['comment-added', 'reply-submitted', 'comment-deleted'])
-
-const newComment = ref('')
-
-const submitComment = () => {
-  if (!newComment.value.trim()) return
-  const newCmt = {
-    id: Date.now(),
-    author: props.currentUser,
-    content: newComment.value,
-    createdAt: new Date().toISOString(),
-    children: []
+export default {
+  name: 'CommentSection',
+  components: { CommentItem },
+  props: {
+    comments: { type: Array, default: () => [] }
+  },
+  data() {
+    return {
+      newComment: ''
+    }
+  },
+  computed: {
+    user() {
+      const userStore = useUserStore()
+      return userStore.currentUser
+    }
+  },
+  methods: {
+    submitComment() {
+      if (!this.newComment.trim()) return
+      const newCmt = {
+        id: Date.now(),
+        author: this.user,
+        content: this.newComment,
+        createdAt: new Date().toISOString(),
+        children: []
+      }
+      this.$emit('comment-added', newCmt)
+      this.newComment = ''
+    },
+    emitReply(parentId, reply) {
+      this.$emit('reply-submitted', parentId, reply)
+    },
+    emitDelete(id) {
+      this.$emit('comment-deleted', id)
+    }
   }
-  emit('comment-added', newCmt)
-  newComment.value = ''
-}
-
-const emitReply = (parentId, reply) => {
-  emit('reply-submitted', parentId, reply)
-}
-
-const emitDelete = (id) => {
-  emit('comment-deleted', id)
 }
 </script>

@@ -25,8 +25,8 @@ public class MemberServiceImpl implements MemberService, MemberReader {
     }
 
     @Override
-    public Member of(Long teamId, Long userId) {
-        Member member = Member.of(teamId, userId);
+    public Member add(Long teamId, Long userId) {
+        Member member = Member.create(teamId, userId);
         memberRepository.save(member);
         return member;
     }

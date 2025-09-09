@@ -45,7 +45,7 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Long createTeam(TeamInfoRequest request, Long userId) {
         Team team = of(request, userId);
-        memberService.of(team.getId(), userId);
+        memberService.add(team.getId(), userId);
 
         makeLeader(team.getId(), userId);
 

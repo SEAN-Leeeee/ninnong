@@ -70,7 +70,7 @@
                 </span>
               </div>
               <div class="c-title col-start" :title="post.title">{{ post.title }}</div>
-              <div class="c-nick col-center">{{ post.nickName }}</div>
+              <div class="c-nick col-center">{{ post.nickname }}</div>
               <div class="c-date col-center">{{ formatDate(post.createdAt) }}</div>
               <div class="c-views col-center">{{ getViews(post) }}</div>
             </div>
@@ -98,21 +98,18 @@ export default {
         MATCHING: '매치'
       },
       selectedCategory: 'ALL',
-
-      selectedSubject: 'ALL', // 'ALL' 또는 subjectMap[*].value 중 하나
-
+      selectedSubject: 'ALL',
       subjectMap: {
         PROMO: [
           { value: 'CONTEST', label: '대회' },
           { value: 'EVENT',   label: '이벤트' }
         ],
         MATCHING: [
-          { value: 'EXHIBITION', label: '교류전' },
+          { value: 'MATCH', label: '교류전' },
           { value: 'GUEST',      label: '게스트' }
         ],
-        FREE: []
+        FREE: [{ value: 'FREE', label: '자유' }]
       },
-
       searchKeyword: '',
       selectedSort: 'LATEST',
       postList: []
@@ -187,20 +184,21 @@ export default {
     },
     isNotice(post) {
       const s = (post.subject || '').toString();
-      return s.includes('공지'); // '공지', '이벤트 공지' 등
+      return s.includes('공지');
     },
     subjectLabel(subj) {
       const s = (subj || '').toString();
+
       const upper = s.toUpperCase();
       const label = this.codeToLabel(upper);
       return label || s;
     },
     subjectClass(subj) {
       const s = (subj || '').toString().toLowerCase();
-      if (s.includes('이벤트')) return 'subject-event';
-      if (s.includes('공지')) return 'subject-notice';
-      if (s.includes('홍보')) return 'subject-promo';
-      if (s.includes('매치')) return 'subject-matching';
+      if (s.includes('event')) return 'subject-event';
+      if (s.includes('guest')) return 'subject-guest';
+      if (s.includes('contest')) return 'subject-promo';
+      if (s.includes('match')) return 'subject-matching';
       return 'subject-free';
     },
     getViews(post) {
