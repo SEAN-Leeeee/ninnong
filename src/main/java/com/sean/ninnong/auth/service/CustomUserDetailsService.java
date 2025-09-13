@@ -2,8 +2,8 @@
 package com.sean.ninnong.auth.service;
 
 import com.sean.ninnong.auth.security.UserPrincipal;
-import com.sean.ninnong.user.User;
-import com.sean.ninnong.user.UserRepository;
+import com.sean.ninnong.user.domain.User;
+import com.sean.ninnong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

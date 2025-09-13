@@ -3,7 +3,7 @@ package com.sean.ninnong.auth.controller;
 import com.sean.ninnong.auth.dto.*;
 import com.sean.ninnong.auth.security.JwtUtil;
 import com.sean.ninnong.auth.service.LoginServiceImpl;
-import com.sean.ninnong.user.UserRepository;
+import com.sean.ninnong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

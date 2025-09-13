@@ -2,13 +2,12 @@ package com.sean.ninnong.auth.service;
 
 import com.sean.ninnong.auth.security.UserPrincipal;
 import com.sean.ninnong.exception.*;
-import com.sun.jdi.request.DuplicateRequestException;
 import com.sean.ninnong.auth.domain.RefreshToken;
 import com.sean.ninnong.auth.dto.*;
 import com.sean.ninnong.auth.repository.RefreshTokenRepository;
 import com.sean.ninnong.auth.security.JwtUtil;
-import com.sean.ninnong.user.User;
-import com.sean.ninnong.user.UserRepository;
+import com.sean.ninnong.user.domain.User;
+import com.sean.ninnong.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

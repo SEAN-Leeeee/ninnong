@@ -1,7 +1,7 @@
 
 package com.sean.ninnong.auth.security;
 
-import com.sean.ninnong.user.User;
+import com.sean.ninnong.user.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

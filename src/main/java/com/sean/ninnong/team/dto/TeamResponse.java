@@ -1,6 +1,6 @@
 package com.sean.ninnong.team.dto;
 
-import com.sean.ninnong.team.Team;
+import com.sean.ninnong.team.domain.Team;
 
 public record TeamResponse(
         Long id,

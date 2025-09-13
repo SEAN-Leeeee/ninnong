@@ -2,8 +2,7 @@ package com.sean.ninnong.application;
 
 
 import com.sean.ninnong.application.dto.ApplicationResponse;
-import com.sean.ninnong.application.teamApplication.ApplicationDecisionRequest;
-import com.sean.ninnong.common.enums.ApplicationStatus;
+import com.sean.ninnong.application.teamApplication.dto.ApplicationDecisionRequest;
 
 public interface Application {
     void applyDecision(ApplicationDecisionRequest request, Long charge);

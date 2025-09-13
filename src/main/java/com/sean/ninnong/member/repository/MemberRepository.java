@@ -1,7 +1,7 @@
 package com.sean.ninnong.member.repository;
 
 
-import com.sean.ninnong.member.Member;
+import com.sean.ninnong.member.domain.Member;
 import com.sean.ninnong.member.repository.projection.TeamMemberCount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,0 +1,25 @@
+package com.sean.ninnong.user.dto;
+
+import com.sean.ninnong.user.repository.UserRepository;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+public class UserReaderImpl implements UserReader {
+    private final UserRepository userRepository;
+
+    public UserReaderImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public UserInfo getUserInfo(Long userId) {
+        return userRepository.findUserInfoByUserId(userId);
+    }
+
+    @Override
+    public List<UserInfo> getUserInfoList(List<Long> userIdList) {
+        return userRepository.findUserInfoByUserId(userIdList);
+    }
+}
