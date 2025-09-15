@@ -8,7 +8,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class RegisterRequest {
     private String email;
     private String name;
@@ -16,4 +15,11 @@ public class RegisterRequest {
     private String password;
     private DraftLevel draftLevel;
 
+    public RegisterRequest(String email, String name, String nickname, String password, DraftLevel draftLevel) {
+        this.email = email;
+        this.name = name;
+        this.nickname = nickname;
+        this.password = password;
+        this.draftLevel = draftLevel;
+    }
 }

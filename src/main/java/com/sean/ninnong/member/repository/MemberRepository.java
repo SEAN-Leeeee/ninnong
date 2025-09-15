@@ -1,6 +1,7 @@
 package com.sean.ninnong.member.repository;
 
 
+import com.sean.ninnong.common.enums.MemberStatus;
 import com.sean.ninnong.member.domain.Member;
 import com.sean.ninnong.member.repository.projection.TeamMemberCount;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,8 +28,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("SELECT m.teamId FROM Member m WHERE m.userId = :userId")
     Long findTeamIdByUserId(@Param("userId") Long userId);
 
-    List<Member> findByTeamIdAndStatusOrderByBackNumber(Long teamId, Member.Status active);
+    List<Member> findByTeamIdAndStatusOrderByBackNumber(Long teamId, MemberStatus active);
 
     List<Member> findByIdIn(List<Long> memberIdList);
 
 }
+₩

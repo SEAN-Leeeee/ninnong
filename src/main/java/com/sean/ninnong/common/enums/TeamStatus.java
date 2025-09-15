@@ -3,12 +3,12 @@ package com.sean.ninnong.common.enums;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum ApplicationStatus {
-    PENDING("대기"),
-    ACCEPT("수락"),
-    REJECTED("반려"),
-    CANCELED("취소");
+public enum TeamStatus {
+
+     ACTIVE("활동"),
+    DELETED("탈퇴");
 
     private final String text;
+
 
 }

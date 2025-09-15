@@ -1,6 +1,7 @@
 package com.sean.ninnong.member.dto;
 
 import com.sean.ninnong.common.enums.DraftLevel;
+import com.sean.ninnong.common.enums.MemberPosition;
 import com.sean.ninnong.common.enums.Role;
 import com.sean.ninnong.member.domain.Member;
 import com.sean.ninnong.user.dto.UserInfo;
@@ -12,7 +13,7 @@ public record MemberInfo(
         String name,
         int backNumber,
         Role role,
-        Member.Position position,
+        MemberPosition position,
         DraftLevel draftLevel,
         LocalDate joinedAt){
 

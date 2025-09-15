@@ -16,9 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional(readOnly = true)
     @Query("SELECT u.id, u.name, u.nickname, u.draftLevel FROM User u WHERE u.id = :userId")
-    UserInfo findUserInfoByUserId(Long userId);
+    User findUserInfoByUserId(Long userId);
 
     @Transactional(readOnly = true)
     @Query("SELECT u.id, u.name, u.nickname, u.draftLevel FROM User u WHERE u.id IN :userIdList")
-    List<UserInfo> findUserInfoByUserId(List<Long> userIdList);
+    List<User> findUserInfoByUserId(List<Long> userIdList);
 }

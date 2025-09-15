@@ -1,5 +1,6 @@
 package com.sean.ninnong.team.domain;
 
+import com.sean.ninnong.common.enums.TeamStatus;
 import com.sean.ninnong.exception.UnauthorizedTeamAccessException;
 import com.sean.ninnong.team.dto.TeamInfoRequest;
 import jakarta.persistence.*;
@@ -49,7 +50,6 @@ public class Team {
         this.createdAt = LocalDateTime.now();
         this.isDeleted = TeamStatus.ACTIVE;
         this.deletedAt = null;
-
     }
     public static Team createTeam(TeamInfoRequest teamInfo, Long creatorId){
        return new Team(teamInfo, creatorId);
@@ -63,7 +63,6 @@ public class Team {
         return this.name;
     }
 
-    public enum TeamStatus { ACTIVE, DELETED}
 
     public void updateInfo(TeamInfoRequest request) {
         this.name = request.getName();

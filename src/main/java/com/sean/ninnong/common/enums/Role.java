@@ -1,3 +1,12 @@
 package com.sean.ninnong.common.enums;
 
-public enum Role {LEADER, MEMBER, GUEST}
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public enum Role {
+
+    LEADER("주장"),
+    MEMBER("멤버"),
+    GUEST("게스트");
+    private final String text;
+    }

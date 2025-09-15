@@ -8,7 +8,6 @@ import com.sean.ninnong.auth.repository.RefreshTokenRepository;
 import com.sean.ninnong.auth.security.JwtUtil;
 import com.sean.ninnong.user.domain.User;
 import com.sean.ninnong.user.repository.UserRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
 @Service
 public class LoginServiceImpl implements LoginService {
 
@@ -28,6 +26,14 @@ public class LoginServiceImpl implements LoginService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
+    public LoginServiceImpl(UserRepository userRepository, RefreshTokenRepository refreshTokenRepository, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+        this.userRepository = userRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+    }
+
     @Override
     public void register(RegisterRequest request) {
         userRepository.findByEmail(request.getEmail())
@@ -36,7 +42,7 @@ public class LoginServiceImpl implements LoginService {
                 });
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
-        User user = User.of(request, encodedPassword);
+        User user = User.create(request, encodedPassword);
         userRepository.save(user);
     }
 

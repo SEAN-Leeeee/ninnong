@@ -2,7 +2,10 @@ package com.sean.ninnong.user.domain;
 
 import com.sean.ninnong.auth.dto.RegisterRequest;
 import com.sean.ninnong.common.enums.DraftLevel;
+import com.sean.ninnong.common.enums.SystemRole;
+import com.sean.ninnong.common.enums.UserStatus;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -20,6 +23,7 @@ import java.time.LocalDateTime;
             @UniqueConstraint(name = "uq_user_email_active", columnNames = {"email", "active_flag"}),
                 }
 )
+@Getter
 public class User  {
 
     @Id
@@ -56,9 +60,6 @@ public class User  {
     private Integer activeFlag;
 
 
-    public enum UserStatus { PENDING, ACTIVE, DELETED }
-    public enum SystemRole { USER, ADMIN }
-
     public User(RegisterRequest request, String encodedPassword) {
         this.email = request.getEmail();
         this.name = request.getName();
@@ -71,23 +72,8 @@ public class User  {
         this.role = SystemRole.USER;
     }
 
-    public static User of(RegisterRequest request, String encodedPassword){
+    public static User create(RegisterRequest request, String encodedPassword){
         return new User(request, encodedPassword);
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Long getId() {
-        return id;
-    }
-    public SystemRole getRole() {
-        return role;
     }
 
 }

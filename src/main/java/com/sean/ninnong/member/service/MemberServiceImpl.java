@@ -1,11 +1,13 @@
 package com.sean.ninnong.member.service;
 
 
+import com.sean.ninnong.common.enums.MemberStatus;
 import com.sean.ninnong.common.enums.Role;
 import com.sean.ninnong.exception.UnauthorizedTeamAccessException;
 import com.sean.ninnong.member.domain.Member;
 import com.sean.ninnong.member.dto.MemberInfo;
 import com.sean.ninnong.member.repository.MemberRepository;
+import com.sean.ninnong.user.domain.User;
 import com.sean.ninnong.user.dto.UserInfo;
 import com.sean.ninnong.user.dto.UserReader;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.sean.ninnong.common.enums.MemberStatus.ACTIVE;
 
 @Service
 public class MemberServiceImpl implements MemberService, MemberReader {
@@ -41,15 +45,18 @@ public class MemberServiceImpl implements MemberService, MemberReader {
 
     @Override
     public List<MemberInfo> getMemberList(Long teamId) {
-        List<Member> memberList = memberRepository.findByTeamIdAndStatusOrderByBackNumber(teamId, Member.Status.ACTIVE);
+        List<Member> memberList = memberRepository.findByTeamIdAndStatusOrderByBackNumber(teamId, ACTIVE);
 
         List<Long> memberIdList = memberList.stream()
                 .map(Member::getUserId).toList();
 
-        List<UserInfo> userInfoList = userReader.getUserInfoList(memberIdList);
+        List<User> userList = userReader.getUserInfoList(memberIdList);
+        List<UserInfo> userInfoList = userList.stream()
+                                        .map(UserInfo::of)
+                                        .toList();
 
         Map<Long, UserInfo> userInfoMap = userInfoList.stream()
-                                                .collect(Collectors.toMap(UserInfo::getId, userInfo -> userInfo));
+                                                .collect(Collectors.toMap(UserInfo::getId, userInfo ->  userInfo));
 
         return memberList.stream()
                 .map(member -> {

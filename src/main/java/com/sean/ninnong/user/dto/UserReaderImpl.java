@@ -1,5 +1,6 @@
 package com.sean.ninnong.user.dto;
 
+import com.sean.ninnong.user.domain.User;
 import com.sean.ninnong.user.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
@@ -14,12 +15,12 @@ public class UserReaderImpl implements UserReader {
     }
 
     @Override
-    public UserInfo getUserInfo(Long userId) {
+    public User getUserInfo(Long userId) {
         return userRepository.findUserInfoByUserId(userId);
     }
 
     @Override
-    public List<UserInfo> getUserInfoList(List<Long> userIdList) {
+    public List<User> getUserInfoList(List<Long> userIdList) {
         return userRepository.findUserInfoByUserId(userIdList);
     }
 }

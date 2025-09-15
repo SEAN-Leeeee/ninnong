@@ -3,10 +3,10 @@ package com.sean.ninnong.common.enums;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum Category {
-    FREE("자유"),
-    PROMO("홍보"),
-    MATCHING("매치");
+public enum SystemRole {
+
+    USER("일반 회원"),
+    ADMIN("관리자");
 
     private final String text;
 }

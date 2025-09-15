@@ -1,5 +1,7 @@
 package com.sean.ninnong.member.domain;
 
+import com.sean.ninnong.common.enums.MemberPosition;
+import com.sean.ninnong.common.enums.MemberStatus;
 import com.sean.ninnong.common.enums.Role;
 import com.sean.ninnong.member.dto.MemberInfo;
 import jakarta.persistence.*;
@@ -11,9 +13,6 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 public class Member {
-
-    public enum Status { ACTIVE, STOPPED, LEAVE, KICKED }
-    public enum Position {GUARD, FORWARD, CENTER, NONE}
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,28 +24,28 @@ public class Member {
     private int backNumber;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Position position;
-    @Column(nullable = false)
-    private LocalDate joinedAt;
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private MemberPosition position;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status;
+    private MemberStatus status;
+    @Column(nullable = false)
+    private LocalDate joinedAt;
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
 
     public Member(Long teamId, Long userId) {
         this.teamId = teamId;
         this.userId = userId;
         this.backNumber = 0;
-        this.position = Position.NONE;
+        this.position = MemberPosition.NONE;
         this.role = Role.MEMBER;
         this.joinedAt = LocalDate.now();
         this.createdAt = LocalDateTime.now();
-        this.status = Status.ACTIVE;
+        this.status = MemberStatus.ACTIVE;
         this.deletedAt = null;
     }
 
@@ -63,14 +62,14 @@ public class Member {
     }
 
     public void stop() {
-        this.status = Status.STOPPED;
+        this.status = MemberStatus.STOPPED;
     }
 
     public void updateRole(Role role) {
         this.role = role;
     }
 
-    public void updateStatus(Status status) {
+    public void updateStatus(MemberStatus status) {
         this.status = status;
     }
 
@@ -92,10 +91,6 @@ public class Member {
         return backNumber;
     }
 
-    public Position getPosition() {
-        return position;
-    }
-
     public LocalDate getJoinedAt() {
         return joinedAt;
     }
@@ -113,5 +108,9 @@ public class Member {
                 ", role=" + role +
                 ", status=" + status +
                 '}';
+    }
+
+    public MemberPosition getPosition() {
+        return position;
     }
 }
