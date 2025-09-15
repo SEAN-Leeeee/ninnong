@@ -7,7 +7,7 @@ import lombok.*;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class RefreshToken {
     @Id

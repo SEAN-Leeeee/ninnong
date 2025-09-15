@@ -5,12 +5,13 @@ import com.sean.ninnong.common.enums.PostSubject;
 import com.sean.ninnong.post.dto.PostRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
 
     @Id

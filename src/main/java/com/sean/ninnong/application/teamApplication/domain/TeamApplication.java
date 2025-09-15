@@ -6,12 +6,13 @@ import com.sean.ninnong.application.dto.ApplicationResponse;
 import com.sean.ninnong.application.teamApplication.dto.ApplicationDecisionRequest;
 import com.sean.ninnong.common.enums.ApplicationStatus;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamApplication implements Application {
 
     @Id

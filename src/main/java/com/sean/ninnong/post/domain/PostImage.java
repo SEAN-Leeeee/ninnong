@@ -1,10 +1,12 @@
 package com.sean.ninnong.post.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostImage {
 
     @Id

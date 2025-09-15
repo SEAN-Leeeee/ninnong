@@ -5,13 +5,15 @@ import com.sean.ninnong.common.enums.MemberStatus;
 import com.sean.ninnong.common.enums.Role;
 import com.sean.ninnong.member.dto.MemberInfo;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

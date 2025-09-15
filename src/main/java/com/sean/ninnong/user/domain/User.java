@@ -6,12 +6,15 @@ import com.sean.ninnong.common.enums.SystemRole;
 import com.sean.ninnong.common.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table (
         name="users",
         indexes={
@@ -20,8 +23,8 @@ import java.time.LocalDateTime;
         },
         uniqueConstraints = {
             @UniqueConstraint(name = "uq_user_nickname_active", columnNames = {"nickname", "active_flag"}),
-            @UniqueConstraint(name = "uq_user_email_active", columnNames = {"email", "active_flag"}),
-                }
+            @UniqueConstraint(name = "uq_user_email_active", columnNames = {"email", "active_flag"})
+        }
 )
 @Getter
 public class User  {
