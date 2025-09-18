@@ -1,3 +1,4 @@
+
 <template>
   <div class="team-board-modal-overlay" @click.self="closeModal">
     <div class="team-board-modal">

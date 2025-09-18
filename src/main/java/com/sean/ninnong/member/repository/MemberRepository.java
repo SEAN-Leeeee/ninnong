@@ -33,4 +33,3 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findByIdIn(List<Long> memberIdList);
 
 }
-₩

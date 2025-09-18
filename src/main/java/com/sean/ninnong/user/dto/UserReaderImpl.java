@@ -16,11 +16,11 @@ public class UserReaderImpl implements UserReader {
 
     @Override
     public User getUserInfo(Long userId) {
-        return userRepository.findUserInfoByUserId(userId);
+        return userRepository.findUserInfoById(userId);
     }
 
     @Override
     public List<User> getUserInfoList(List<Long> userIdList) {
-        return userRepository.findUserInfoByUserId(userIdList);
+        return userRepository.findUserInfoById(userIdList);
     }
 }

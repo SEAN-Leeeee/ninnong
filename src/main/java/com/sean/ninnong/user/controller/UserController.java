@@ -19,14 +19,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("me")
+    @GetMapping("/me")
     public ResponseEntity<UserResponse> getMyInfo(@AuthenticationPrincipal UserPrincipal user) {
+        System.out.println("@@@@ getMyInfo controller entered");
+
         if (user == null) {
+            System.out.println("@@@@ UserPrincipal is null, returning UNAUTHORIZED");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
         }
+        System.out.println("@@@@ UserPrincipal found: " + user.getUsername());
         UserResponse userResponse = userService.getMyInfo(user.getId(), user.getUsername());
-
         return ResponseEntity.ok().body(userResponse);
     }
 }

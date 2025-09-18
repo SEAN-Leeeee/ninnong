@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService{
         Long teamId = memberReader.getMyTeamId(userId);
         User user = userReader.getUserInfo(userId);
         UserInfo userInfo = UserInfo.of(user);
+
         return new UserResponse(userId, userEmail, userInfo.getName(), userInfo.getNickname(), teamId, userInfo.getDraftLevel());
     }
 
@@ -30,4 +31,3 @@ public class UserServiceImpl implements UserService{
 
 
 }
-

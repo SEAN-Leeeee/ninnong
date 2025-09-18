@@ -79,9 +79,6 @@ public class Post {
     }
 
     private void changeSubject(PostSubject subject) {
-
-        System.out.println("@@ 서브젝트 : " +subject );
-        System.out.println("@@ 서브젝트 네임: " + subject.name() );
         this.subject = subject;
     }
 
@@ -91,8 +88,6 @@ public class Post {
     }
 
     private void validateCategory(Category category) {
-        System.out.println("@@ 카테고리 : " + category );
-        System.out.println("@@ 카테고리 네임: " + category.name() );
         if(category == null) throw new IllegalArgumentException("카테고리는 비어있을 수 없습니다.");
     }
 

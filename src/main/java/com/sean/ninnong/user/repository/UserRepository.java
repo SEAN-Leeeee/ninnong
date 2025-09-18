@@ -1,7 +1,6 @@
 package com.sean.ninnong.user.repository;
 
 import com.sean.ninnong.user.domain.User;
-import com.sean.ninnong.user.dto.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,10 +14,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     @Transactional(readOnly = true)
-    @Query("SELECT u.id, u.name, u.nickname, u.draftLevel FROM User u WHERE u.id = :userId")
-    User findUserInfoByUserId(Long userId);
+    @Query("SELECT u FROM User u WHERE u.id = :userId")
+    User findUserInfoById(Long userId);
 
     @Transactional(readOnly = true)
-    @Query("SELECT u.id, u.name, u.nickname, u.draftLevel FROM User u WHERE u.id IN :userIdList")
-    List<User> findUserInfoByUserId(List<Long> userIdList);
+    @Query("SELECT u FROM User u WHERE u.id IN :userIdList")
+    List<User> findUserInfoById(List<Long> userIdList);
 }

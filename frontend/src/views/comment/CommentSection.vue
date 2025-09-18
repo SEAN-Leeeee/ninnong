@@ -1,9 +1,9 @@
 <template>
   <div class="comment-wrapper">
-    <h3 class="comment-count">댓글 {{ comments.length }}</h3>
+    <h3 class="comment-count">댓글 {{ totalCommentCount }}</h3>
 
     <div class="comment-input-wrapper">
-      <textarea v-model="newComment" class="comment-textarea" placeholder="댓글을 입력해주세요" />
+      <textarea v-model="newComment" class="comment-textarea" placeholder="댓글을 입력해주세요"></textarea>
       <button class="comment-submit-btn" @click="submitComment">작성</button>
     </div>
 
@@ -11,54 +11,106 @@
         v-for="comment in comments"
         :key="comment.id"
         :comment="comment"
-        :depth="0"
-        @reply-submitted="emitReply"
-        @comment-deleted="emitDelete"
+        @add-reply="handleAddReply"
+        @delete-comment="handleDeleteComment"
+        @edit-comment="handleEditComment"
     />
   </div>
 </template>
 
 <script>
-import CommentItem from './CommentItem.vue'
-import { useUserStore } from '@stores/user.js'
-import api from "@/axios.js";
+import api from '@/axios.js';
+import CommentItem from './CommentItem.vue';
+import { useUserStore } from '@stores/user.js';
 
 export default {
   name: 'CommentSection',
   components: { CommentItem },
   props: {
-    comments: { type: Array, default: () => [] }
+    postId: { type: Number, required: true },
   },
   data() {
     return {
-      newComment: ''
+      newComment: '',
+      comments: [],
     }
   },
   computed: {
-    user() {
-      const userStore = useUserStore()
-      return userStore.currentUser
+    totalCommentCount() {
+      if (!this.comments) return 0;
+      return this.comments.reduce((count, comment) => {
+        return count + 1 + (comment.children ? comment.children.length : 0);
+      }, 0);
     }
   },
+  async mounted() {
+    await this.loadComments();
+  },
   methods: {
-    submitComment() {
-      if (!this.newComment.trim()) return
-      const newCmt = {
-        id: Date.now(),
-        author: this.user,
-        content: this.newComment,
-        createdAt: new Date().toISOString(),
-        children: []
+    async loadComments() {
+      if (!this.postId) return;
+      try {
+        const res = await api.get(`/comments/${this.postId}`)
+        this.comments = res.data
+      } catch (e) {
+        console.error('댓글을 불러오는 중 오류가 발생했습니다.', e)
       }
-      this.$emit('comment-added', newCmt)
-      this.newComment = ''
     },
-    emitReply(parentId, reply) {
-      this.$emit('reply-submitted', parentId, reply)
+    submitComment() {
+      if (!this.newComment.trim()) {
+        alert('댓글 내용을 입력해주세요.');
+        return;
+      }
+      this.handleAddComment(this.newComment.trim());
+      this.newComment = '';
     },
-    emitDelete(id) {
-      this.$emit('comment-deleted', id)
-    }
+    async handleAddComment(content) {
+      try {
+        await api.post(`/comments/${this.postId}`, {
+          content,
+          postId: this.postId,
+          parentId: null,
+        })
+        await this.loadComments()
+      } catch (e) {
+        console.error('댓글 작성 중 오류가 발생했습니다.', e)
+        alert('댓글을 작성할 수 없습니다.')
+      }
+    },
+    async handleAddReply({ parentId, content }) {
+      try {
+        await api.post(`/comments/${this.postId}`, {
+          content,
+          postId: this.postId,
+          parentId,
+        })
+        await this.loadComments()
+      } catch (e) {
+        console.error('답글 작성 중 오류가 발생했습니다.', e)
+        alert('답글을 작성할 수 없습니다.')
+      }
+    },
+    async handleEditComment({ commentId, content }) {
+      try {
+        await api.patch(`/comments/${commentId}`, null, {
+          params: { newContent: content }
+        })
+        await this.loadComments()
+      } catch (e) {
+        console.error('댓글 수정 중 오류가 발생했습니다.', e)
+        alert('댓글을 수정할 수 없습니다.')
+      }
+    },
+    async handleDeleteComment(commentId) {
+      if (!confirm('정말로 이 댓글을 삭제하시겠습니까?')) return;
+      try {
+        await api.delete(`/comments/${commentId}`)
+        await this.loadComments()
+      } catch (e) {
+        console.error('댓글 삭제 중 오류가 발생했습니다.', e)
+        alert('댓글을 삭제할 수 없습니다.')
+      }
+    },
   }
 }
 </script>

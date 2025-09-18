@@ -4,22 +4,18 @@
       <div class="pd-title-row">
         <div class="pd-badges">
           <span class="subject-badge" :class="subjectClass(post.subject)">
-                  {{ subjectLabel(post.subject) }}
-                </span>
+            {{ subjectLabel(post.subject) }}
+          </span>
         </div>
-        <h1 class="pd-title" :title="post.title">{{ post.title}}</h1>
+        <h1 class="pd-title" :title="post.title">{{ post.title }}</h1>
       </div>
 
       <div class="pd-meta">
         <div class="pd-meta-left">
-          <span class="pd-writer">{{ post.nickname}}</span>
+          <span class="pd-writer">{{ post.nickname }}</span>
           <span class="pd-dot">·</span>
           <time class="pd-date">{{ formatDate(post.createdAt) }}</time>
         </div>
-<!--        <div class="pd-meta-right">-->
-<!--          <span class="pd-meta-chip">조회 {{ num(post.views) }}</span>-->
-<!--          <span class="pd-meta-chip">댓글 {{ num(post.commentCount) }}</span>-->
-<!--        </div>-->
       </div>
     </div>
 
@@ -35,12 +31,8 @@
 
     <hr class="pd-sep" />
 
-    <CommentSection
-        :comments="post.comments"
-        @reply-submitted="addReply"
-        @comment-added="addComment"
-        @comment-deleted="deleteComment"
-    />
+    <CommentSection :post-id="postId" />
+
   </div>
 </template>
 
@@ -59,33 +51,36 @@ export default {
       subjectMap: {
         PROMO: [
           { value: 'CONTEST', label: '대회' },
-          { value: 'EVENT',   label: '이벤트' }
+          { value: 'EVENT', label: '이벤트' }
         ],
         MATCHING: [
           { value: 'MATCH', label: '교류전' },
-          { value: 'GUEST',      label: '게스트' }
+          { value: 'GUEST', label: '게스트' }
         ],
         FREE: [{ value: 'FREE', label: '자유' }]
       },
     }
   },
   async mounted() {
-    this.initPost();
+    await this.initPost();
   },
   computed: {
-    // 콘텐츠 내부의 상대 경로(/api/uploads, /uploads 등)을 절대 URL로 변환해서 표시
     contentHtml() {
       return this.rewriteRelativeMedia(this.post.content || '')
+    },
+    postId() {
+      // Ensure postId is a Number
+      return Number(this.$route.params.id);
     }
   },
   methods: {
     async initPost() {
-      const id = this.$route.params.id;
       try {
-        const res = await api.get(`/posts/${id}`)
+        const res = await api.get(`/posts/${this.postId}`)
         this.post = res.data
       } catch (e) {
-        console.error(e)
+        console.error('게시글을 불러오는 중 오류가 발생했습니다.', e)
+        alert('게시글을 불러올 수 없습니다.')
       }
     },
     formatDate(v) {
@@ -99,48 +94,25 @@ export default {
         minute: '2-digit'
       })
     },
-    num(n) {
-      return typeof n === 'number' ? n.toLocaleString('ko-KR') : n
-    },
     goBack() {
       this.$router.push('/community')
     },
     editPost() {
       this.$router.push(`/edit/${this.post.id}`)
     },
-    deletePost() {
-      // TODO: 실제 삭제 API 연동
-      alert('삭제 기능 준비 중입니다.')
-    },
-    addComment(comment) {
-      this.post.comments.push(comment)
-      this.post.commentCount++
-    },
-    addReply(parentId, reply) {
-      const recur = (list) => {
-        for (const c of list) {
-          if (c.id === parentId) { c.children.push(reply); return true }
-          if (c.children?.length && recur(c.children)) return true
-        }
-        return false
+    async deletePost() {
+      if (!confirm('정말로 이 게시글을 삭제하시겠습니까?')) return;
+      try {
+        await api.delete(`/posts/${this.post.id}`);
+        alert('게시글이 삭제되었습니다.');
+        this.$router.push('/community');
+      } catch (e) {
+        console.error('게시글 삭제 중 오류가 발생했습니다.', e);
+        alert('게시글을 삭제할 수 없습니다.');
       }
-      recur(this.post.comments)
-      this.post.commentCount++
     },
-    deleteComment(idToDelete) {
-      const prune = (list) =>
-          list.filter(c => {
-            if (c.id === idToDelete) return false
-            if (c.children?.length) c.children = prune(c.children)
-            return true
-          })
-      this.post.comments = prune(this.post.comments)
-      this.post.commentCount = Math.max(0, this.post.commentCount - 1)
-    },
-
     subjectLabel(subj) {
       const s = (subj || '').toString();
-
       const upper = s.toUpperCase();
       const label = this.codeToLabel(upper);
       return label || s;
@@ -164,10 +136,8 @@ export default {
       if (!html) return ''
       const wrapper = document.createElement('div')
       wrapper.innerHTML = html
-
       const toAbsolute = (path) => {
         if (!path) return path
-        // /api/uploads/... -> /uploads/... 로 치환(401 방지)
         const fixed = path.startsWith('/api/uploads/')
             ? path.replace(/^\/api/, '')
             : path
@@ -175,7 +145,6 @@ export default {
             ? fixed
             : `${BASE_URL}${fixed}`
       }
-
       wrapper.querySelectorAll('img').forEach(img => {
         const src = img.getAttribute('src') || ''
         if (src) {
@@ -184,14 +153,12 @@ export default {
           img.setAttribute('decoding', 'async')
         }
       })
-
       wrapper.querySelectorAll('a').forEach(a => {
         const href = a.getAttribute('href') || ''
         if (href && href.startsWith('/')) {
           a.setAttribute('href', toAbsolute(href))
         }
       })
-
       return wrapper.innerHTML
     }
   }

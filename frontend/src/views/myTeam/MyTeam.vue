@@ -62,9 +62,9 @@ import FeePanel from './FeePanel.vue'
 export default {
   name: 'MyTeam',
   components: {
+    MemberManage,
     AttendancePanel,
     VideoPanel,
-    MemberManage,
     FeePanel
   },
   data() {
@@ -74,9 +74,9 @@ export default {
       selectedTab: 'member',
       tabs: [
         { label: '멤버', value: 'member' },
-        { label: '활동', value: 'activities' },
-        { label: '영상', value: 'video' },
-        { label: '회비', value: 'fee' }
+        // { label: '활동', value: 'activities' },
+        // { label: '영상', value: 'video' },
+        // { label: '회비', value: 'fee' }
       ],
       leader: {},
       isLeader: false,

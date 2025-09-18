@@ -1,15 +1,16 @@
 package com.sean.ninnong.comment.domain;
 
+import com.sean.ninnong.comment.dto.CommentRequest;
+import com.sean.ninnong.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
-
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment {
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,38 +25,28 @@ public class Comment {
     @Column(nullable = false)
     private Long postId;
 
-    @Column(name = "parent_id")
     private Long parentId;
-
-    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
-    private int depth = 0;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
-    private LocalDateTime deletedAt;
 
     @Column(nullable = false)
     private boolean isDeleted = false;
 
-//    // === 비즈니스 메서드 === //
-//
-//    public void updateContent(String newContent) {
-//        this.content = newContent;
-//        this.updatedAt = LocalDateTime.now();
-//    }
-//
-//    public void delete() {
-//        this.isDeleted = true;
-//        this.deletedAt = LocalDateTime.now();
-//        this.content = "삭제된 댓글입니다.";
-//    }
-//
-//    public void addChild(Comment child) {
-//        child.setParent(this);
-//        child.setDepth(this.depth + 1); // 부모 depth + 1
-//        this.children.add(child);
-//    }
+    public static Comment create(CommentRequest request, Long writer) {
+        return new Comment(request.getContent(), writer, request.getPostId(), request.getParentId());
+    }
+
+    public Comment(String content, Long writer, Long postId, Long parentId) {
+        this.content = content;
+        this.writer = writer;
+        this.postId = postId;
+        this.parentId = parentId;
+        this.isDeleted = false;
+    }
+
+    public void modifyContent(String newComment) {
+        this.content = newComment;
+    }
+
+    public void deleteComment(Long id) {
+        this.isDeleted = true;
+    }
 }

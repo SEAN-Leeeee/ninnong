@@ -35,13 +35,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public Long create(PostRequest request, Long creatorId) {
+    public Long create(PostRequest request, Long writer) {
         //검사
-        Post post = Post.create(request, creatorId);
+        Post post = Post.create(request, writer);
         postRepository.save(post);
         Optional.ofNullable(request.getImageUrls())
                 .filter(list -> !list.isEmpty())
-                .ifPresent(list -> postImageService.create(request.getImageUrls(), post.getId(), creatorId));
+                .ifPresent(list -> postImageService.create(request.getImageUrls(), post.getId(), writer));
 
         return post.getId();
 
