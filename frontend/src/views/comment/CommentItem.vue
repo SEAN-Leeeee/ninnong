@@ -4,7 +4,7 @@
     <div class="comment-item" :class="{ 'is-deleted': comment.isDeleted, 'is-own': isOwner(comment.writerId) }">
 
       <div class="comment-main">
-        <div class="comment-meta">
+        <div class="comment-meta" :data-menu-id="comment.id">
           <strong class="author">{{ displayAuthor(comment.isDeleted, comment.writerNickname) }}</strong>
           <span class="meta-sep">·</span>
           <time class="date">{{ formatDate(comment.createdAt) }}</time>
@@ -18,21 +18,21 @@
               v-if="isOwner(comment.writerId) && !comment.isDeleted"
               class="menu-button"
               aria-label="more actions"
-              @click.stop="toggleMenu"
+              @click.stop="toggleMenu(comment.id)"
           >⋯</button>
-          <div v-if="menuOpen" class="menu-dropdown" @click.stop>
-            <button class="menu-item" @click="startEdit">수정 </button>
-            <button class="menu-item danger" @click="confirmDelete">삭제</button>
+          <div v-if="menuOpenFor === comment.id" class="menu-dropdown" @click.stop>
+            <button class="menu-item" @click="startEdit(comment)">수정 </button>
+            <button class="menu-item danger" @click="confirmDelete(comment.id)">삭제</button>
           </div>
         </div>
 
         <div class="comment-content">
-          <template v-if="!isEditing">
+          <template v-if="editingComment?.id !== comment.id">
             {{ comment.content }}
           </template>
           <template v-else>
             <textarea
-                v-model="editText"
+                v-model="editingComment.content"
                 class="edit-textarea"
                 rows="3"
                 placeholder="댓글 수정..."
@@ -62,30 +62,43 @@
     <div class="children" v-if="comment.children && comment.children.length > 0" >
       <div
           class="comment-item is-child"
-          :class="{ 'is-deleted': child.isDeleted, 'is-own': isOwner(child.writer) }"
+          :class="{ 'is-deleted': child.idDeleted, 'is-own': isOwner(child.writer) }"
           v-for="child in comment.children"
           :key="child.id"
-          :data-id="child.id"
       >
         <div class="comment-main">
-          <div class="comment-meta">
-            <strong class="author">{{ displayAuthor(child.isDeleted, child.writerNickname) }}</strong>
+          <div class="comment-meta" :data-menu-id="child.id">
+            <strong class="author">{{ displayAuthor(child.idDeleted, child.writerNickname) }}</strong>
             <span class="meta-sep">·</span>
             <time class="date">{{ formatDate(child.createdAt) }}</time>
             <span class="meta-spacer"></span>
             <button
-                v-if="isOwner(child.writer) && !child.isDeleted"
+                v-if="isOwner(child.writer) && !child.idDeleted"
                 class="menu-button"
                 aria-label="more actions"
-                @click.stop="toggleChildMenu(child.id)"
+                @click.stop="toggleMenu(child.id)"
             >⋯</button>
-            <div v-if="childMenus[child.id]" class="menu-dropdown" @click.stop>
-              <button class="menu-item" @click="startChildEdit(child)">수정</button>
-              <button class="menu-item danger" @click="confirmChildDelete(child)">삭제</button>
+            <div v-if="menuOpenFor === child.id" class="menu-dropdown" @click.stop>
+              <button class="menu-item" @click="startEdit(child)">수정</button>
+              <button class="menu-item danger" @click="confirmDelete(child.id)">삭제</button>
             </div>
           </div>
           <div class="comment-content">
-            {{ child.content }}
+            <template v-if="editingComment?.id !== child.id">
+              {{ child.content }}
+            </template>
+            <template v-else>
+              <textarea
+                  v-model="editingComment.content"
+                  class="edit-textarea"
+                  rows="3"
+                  placeholder="답글 수정..."
+              ></textarea>
+              <div class="edit-actions">
+                <button class="btn-primary" @click="submitEdit">수정</button>
+                <button class="btn-secondary" @click="cancelEdit">취소</button>
+              </div>
+            </template>
           </div>
         </div>
       </div>
@@ -94,132 +107,124 @@
 </template>
 
 <script>
-import { useUserStore } from '@stores/user.js'
+import { useUserStore } from '@stores/user.js';
+import { defineComponent, ref, computed, onMounted, onBeforeUnmount } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'CommentItem',
   props: {
     comment: { type: Object, required: true },
   },
   emits: ['add-reply', 'delete-comment', 'edit-comment'],
-  data() {
-    return {
-      menuOpen: false,
-      childMenus: {},
-      isEditing: false,
-      editText: '',
-      showReply: false,
-      replyText: '',
-    }
-  },
-  computed: {
-    user() {
-      const userStore = useUserStore()
-      return userStore.currentUser
-    },
-  },
-  methods: {
-    handleOutsideClick(event) {
-      // Close parent menu if click is outside both button and dropdown
-      if (this.menuOpen) {
-        const parentRoot = this.$el.querySelector('.comment-item:not(.is-child)');
-        const parentBtn  = parentRoot ? parentRoot.querySelector('.menu-button') : null;
-        const parentMenu = parentRoot ? parentRoot.querySelector('.menu-dropdown') : null;
-        const isInsideParent = (parentBtn && parentBtn.contains(event.target)) ||
-                               (parentMenu && parentMenu.contains(event.target));
-        if (!isInsideParent) this.menuOpen = false;
-      }
-      // Close open child menus if click is outside
-      for (const id in this.childMenus) {
-        if (!this.childMenus[id]) continue;
-        const childRoot = this.$el.querySelector(`.comment-item.is-child[data-id="${id}"]`);
-        const childBtn  = childRoot ? childRoot.querySelector('.menu-button') : null;
-        const childMenu = childRoot ? childRoot.querySelector('.menu-dropdown') : null;
-        const isInsideChild = (childBtn && childBtn.contains(event.target)) ||
-                              (childMenu && childMenu.contains(event.target));
-        if (!isInsideChild) {
-          if (this.$set) this.$set(this.childMenus, id, false);
-          else this.childMenus[id] = false;
+  setup(props, { emit }) {
+    const userStore = useUserStore();
+    const user = computed(() => userStore.currentUser);
+
+    const menuOpenFor = ref(null); // Holds the ID of the comment whose menu is open
+    const editingComment = ref(null); // Holds the comment object being edited
+    const showReply = ref(false);
+    const replyText = ref('');
+
+    const isOwner = (writerId) => {
+      const me = user.value?.id;
+      if (me == null || writerId == null) return false;
+      // The writerId might be an object { id: ... } in some cases.
+      const ownerId = typeof writerId === 'object' ? writerId.id : writerId;
+      return String(me) === String(ownerId);
+    };
+
+    const displayAuthor = (isDeleted, writerNickname) => {
+      return isDeleted ? '알 수 없음' : writerNickname;
+    };
+
+    const formatDate = (date) => {
+      if (!date) return '';
+      return new Date(date).toLocaleString('ko-KR', { dateStyle: 'short', timeStyle: 'short' });
+    };
+
+    const toggleMenu = (commentId) => {
+      menuOpenFor.value = menuOpenFor.value === commentId ? null : commentId;
+    };
+
+    const closeMenu = () => {
+      menuOpenFor.value = null;
+    };
+
+    const startEdit = (comment) => {
+      editingComment.value = { ...comment, originalContent: comment.content };
+      closeMenu();
+    };
+
+    const cancelEdit = () => {
+      editingComment.value = null;
+    };
+
+    const submitEdit = () => {
+      if (!editingComment.value || !editingComment.value.content.trim()) return;
+      emit('edit-comment', {
+        commentId: editingComment.value.id,
+        content: editingComment.value.content.trim(),
+      });
+      cancelEdit();
+    };
+
+    const confirmDelete = (commentId) => {
+      emit('delete-comment', commentId);
+      closeMenu();
+    };
+
+    const toggleReply = () => {
+      showReply.value = !showReply.value;
+      closeMenu();
+    };
+
+    const submitReply = () => {
+      if (!replyText.value.trim()) return;
+      emit('add-reply', {
+        parentId: props.comment.id,
+        content: replyText.value.trim(),
+      });
+      replyText.value = '';
+      showReply.value = false;
+    };
+
+    // Close menu if clicking outside
+    const handleOutsideClick = (event) => {
+      if (menuOpenFor.value) {
+        const menuElement = document.querySelector(`[data-menu-id="${menuOpenFor.value}"]`);
+        if (menuElement && !menuElement.contains(event.target)) {
+          closeMenu();
         }
       }
-    },
-    isOwner(writerId) {
-      const me = this.user?.id;
-      if (me == null || writerId == null) return false;
-      const ownerId = (typeof writerId === 'object') ? writerId.id : writerId;
-      return String(me) === String(ownerId);
-    },
-    displayAuthor(isDeleted, writerNickname) {
-      if (isDeleted) return '알 수 없음';
-        return writerNickname;
-    },
-    authorInitial(writerId) {
-      const authorName = this.displayAuthor(writerId);
-      return authorName.charAt(0).toUpperCase();
-    },
-    formatDate(date) {
-      if (!date) return '';
-      const d = new Date(date);
-      return d.toLocaleString('ko-KR', { dateStyle: 'short', timeStyle: 'short' });
-    },
-    toggleMenu() {
-      this.menuOpen = !this.menuOpen;
-    },
-    toggleReply() {
-      this.showReply = !this.showReply;
-      this.menuOpen = false;
-    },
-    startEdit() {
-      this.isEditing = true;
-      this.editText = this.comment.content;
-      this.menuOpen = false;
-    },
-    cancelEdit() {
-      this.isEditing = false;
-      this.editText = '';
-    },
-    submitEdit() {
-      if (!this.editText.trim()) return;
-      this.$emit('edit-comment', { commentId: this.comment.id, content: this.editText.trim() });
-      this.cancelEdit();
-    },
-    confirmDelete() {
-      this.$emit('delete-comment', this.comment.id);
-      this.menuOpen = false;
-    },
-    submitReply() {
-      if (!this.replyText.trim()) return;
-      this.$emit('add-reply', { parentId: this.comment.id, content: this.replyText.trim() });
-      this.replyText = '';
-      this.showReply = false;
-    },
-    toggleChildMenu(childId) {
-      if (this.$set) this.$set(this.childMenus, childId, !this.childMenus[childId]);
-      else this.childMenus[childId] = !this.childMenus[childId];
-    },
-    startChildEdit(child) {
-      const next = prompt('내용 수정', child.content);
-      if (next && next.trim()) {
-        this.$emit('edit-comment', { commentId: child.id, content: next.trim() });
-      }
-      this.childMenus[child.id] = false;
-    },
-    confirmChildDelete(child) {
-      this.$emit('delete-comment', child.id);
-      this.childMenus[child.id] = false;
-    },
+    };
+
+    onMounted(() => {
+      document.addEventListener('click', handleOutsideClick, true);
+    });
+
+    onBeforeUnmount(() => {
+      document.removeEventListener('click', handleOutsideClick, true);
+    });
+
+    return {
+      user,
+      menuOpenFor,
+      editingComment,
+      showReply,
+      replyText,
+      isOwner,
+      displayAuthor,
+      formatDate,
+      toggleMenu,
+      startEdit,
+      cancelEdit,
+      submitEdit,
+      confirmDelete,
+      toggleReply,
+      submitReply,
+    };
   },
-  mounted() {
-    document.addEventListener('click', this.handleOutsideClick, true);
-  },
-  beforeUnmount() {
-    document.removeEventListener('click', this.handleOutsideClick, true);
-  },
-  // Vue 2 fallback
-  beforeDestroy() {
-    document.removeEventListener('click', this.handleOutsideClick, true);
-  },
-}
+});
 </script>
 
 <style scoped>
