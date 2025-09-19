@@ -27,7 +27,11 @@ public class UserServiceImpl implements UserService{
         return new UserResponse(userId, userEmail, userInfo.getName(), userInfo.getNickname(), teamId, userInfo.getDraftLevel());
     }
 
-
+    @Override
+    public String getNickname(Long id) {
+        User userInfo = userReader.getUserInfo(id);
+        return userInfo.getNickname();
+    }
 
 
 }
