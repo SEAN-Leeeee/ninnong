@@ -2,11 +2,6 @@
   <div class="comment-wrapper">
     <h3 class="comment-count">댓글 {{ totalCommentCount }}</h3>
 
-    <div class="comment-input-wrapper">
-      <textarea v-model="newComment" class="comment-textarea" placeholder="댓글을 입력해주세요"></textarea>
-      <button class="comment-submit-btn" @click="submitComment" :disabled="isLoading">작성</button>
-    </div>
-
     <div v-if="isLoading" class="loading-message">댓글을 불러오는 중...</div>
     <div v-if="error" class="error-message">{{ error }}</div>
 
@@ -23,6 +18,11 @@
 
     <div v-if="!isLoading && !error && comments.length === 0" class="no-comments-message">
       아직 댓글이 없습니다. 첫 댓글을 작성해보세요!
+    </div>
+
+    <div class="comment-input-wrapper">
+      <textarea v-model="newComment" class="comment-textarea" placeholder="댓글을 입력해주세요"></textarea>
+      <button class="comment-submit-btn" @click="submitComment" :disabled="isLoading">작성</button>
     </div>
   </div>
 </template>
@@ -203,7 +203,8 @@ const handleDeleteComment = async (commentId) => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-top: 40px; /* Add space above the input form */
+  margin-bottom: 0; /* Remove bottom margin as it's now at the end */
 }
 .comment-textarea {
   width: 100%;

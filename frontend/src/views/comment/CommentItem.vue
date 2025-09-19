@@ -10,7 +10,7 @@
           <time class="date">{{ formatDate(comment.createdAt) }}</time>
           <span class="meta-spacer"></span>
           <button
-              v-if="!comment.isDeleted"
+              v-if="!comment.isDeleted && !comment.parentId"
               class="btn-reply"
               @click="toggleReply"
           >답글</button>
@@ -385,6 +385,7 @@ export default defineComponent({
   margin-top: 6px;
   display: flex;
   gap: 8px;
+  justify-content: flex-end; /* Align buttons to the right */
 }
 /* Unified button base — identical shape/size/typography */
 .btn-primary,
@@ -428,6 +429,8 @@ export default defineComponent({
 }
 .reply-actions {
   margin-top: 6px;
+  display: flex;
+  justify-content: flex-end; /* Align button to the right */
 }
 
 /* Children: indent only — no background and no hover color */
