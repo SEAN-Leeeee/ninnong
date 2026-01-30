@@ -41,7 +41,7 @@ class CommentServiceImplTest {
     }
 
     Long createPost() {
-        return postService.create(PostRequest.builder()
+        return postService.createPost(PostRequest.builder()
                 .category(FREE)
                 .subject(PostSubject.FREE)
                 .title("테스트")

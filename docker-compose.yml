@@ -12,25 +12,32 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: spring-ninnong
-    ports:
-      - "8080:8080"
-    environment:
-      - JWT_ISSUER=${JWT_ISSUER}
-      - JWT_ACCESS_TOKEN_KEY=${JWT_ACCESS_TOKEN_KEY}
-      - JWT_REFRESH_TOKEN_KEY=${JWT_REFRESH_TOKEN_KEY}
-      - JWT_ACCESS_TOKEN_TTL=${JWT_ACCESS_TOKEN_TTL}
-      - JWT_REFRESH_TOKEN_TTL=${JWT_REFRESH_TOKEN_TTL}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_TRANSACTION=DEBUG
-      - LOGGING_LEVEL_ORG_HIBERNATE_SQL=DEBUG
-    volumes:
-      - ./uploads:/app/uploads
-    depends_on:
-      - mysql
+         build:
+           context: .
+           dockerfile: Dockerfile
+         container_name: spring-ninnong
+         ports:
+           - "8080:8080"
+         environment:
+           # --- Spring Boot DB 연결 정보 ---
+           - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=UTF-8
+           - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
+           - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
+
+           # --- JWT 설정 정보 ---
+           - JWT_ISSUER=${JWT_ISSUER}
+           - JWT_ACCESS_TOKEN_KEY=${JWT_ACCESS_TOKEN_KEY}
+           - JWT_REFRESH_TOKEN_KEY=${JWT_REFRESH_TOKEN_KEY}
+           - JWT_ACCESS_TOKEN_TTL=${JWT_ACCESS_TOKEN_TTL}
+           - JWT_REFRESH_TOKEN_TTL=${JWT_REFRESH_TOKEN_TTL}
+
+           # --- 로깅 설정 ---
+           - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_TRANSACTION=DEBUG
+           - LOGGING_LEVEL_ORG_HIBERNATE_SQL=DEBUG
+         volumes:
+           - ./uploads:/app/uploads
+         depends_on:
+           - mysql
 
   frontend-builder:
     build:

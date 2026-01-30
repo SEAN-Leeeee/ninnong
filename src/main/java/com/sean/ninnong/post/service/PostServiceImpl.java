@@ -33,10 +33,8 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    @Override
     @Transactional
-    public Long create(PostRequest request, Long writer) {
-        //검사
+    public Long createPost(PostRequest request, Long writer) {
         Post post = Post.create(request, writer);
         postRepository.save(post);
         Optional.ofNullable(request.getImageUrls())
@@ -57,12 +55,22 @@ public class PostServiceImpl implements PostService {
         return postRepository.findActivePostFrom(id);
     }
 
-    @Override
     @Transactional
-    public void modify(PostRequest modifyPost, Long id, Long modifierId) {
+    public void modifyPost(PostRequest modifyPost, Long id, Long modifierId) {
         Post post = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
         checkOwnership(post.getId(), modifierId);
         post.modify(modifyPost);
     }
 
+    @Override
+    public void deletePost(Long id, Long modifierId) {
+        checkOwnership(id, modifierId);
+
+
+        //이미지 삭제
+        //댓글 삭제
+        //게시글 삭제.
+
+
+    }
 }

@@ -98,7 +98,7 @@ export default {
       this.$router.push('/community')
     },
     editPost() {
-      this.$router.push(`/edit/${this.post.id}`)
+      this.$router.push(`/community/edit/${this.post.id}`)
     },
     async deletePost() {
       if (!confirm('정말로 이 게시글을 삭제하시겠습니까?')) return;

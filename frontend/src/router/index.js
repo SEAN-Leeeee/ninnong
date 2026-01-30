@@ -66,6 +66,12 @@ const routes = [
         component: PostDetail,
 
 
+    },
+    {
+        path: '/community/edit/:id',
+        name: 'EditPost',
+        component: WritePost,
+        meta: { requiresAuth: true }
     }
 ];
 

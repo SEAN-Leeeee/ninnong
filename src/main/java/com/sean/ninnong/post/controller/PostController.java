@@ -33,16 +33,17 @@ public class PostController {
     }
     @PostMapping
     public ResponseEntity<PostResponseMsg> createPost(@RequestBody PostRequest post, @AuthenticationPrincipal UserPrincipal user) {
-        Long id = postService.create(post, user.getId());
+        Long id = postService.createPost(post, user.getId());
 
         return ResponseEntity.ok().body(PostResponseMsg.create(id));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<PostResponseMsg> modifyPost(@PathVariable Long id, @RequestBody PostRequest modifyPost, @AuthenticationPrincipal UserPrincipal user) {
-        postService.modify(modifyPost, id, user.getId());
+        postService.modifyPost(modifyPost, id, user.getId());
 
         return ResponseEntity.ok().body(PostResponseMsg.modify(id));
     }
+
 
 }
