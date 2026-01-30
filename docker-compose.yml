@@ -39,15 +39,15 @@ services:
          depends_on:
            - mysql
 
-  frontend-builder:
+  frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: vue-builder
-    command: sh -c "npm install && npm run build"
-    volumes:
-      - ./frontend/dist:/frontend/dist
-    # 개발 환경에서는 사용 안 함
+    container_name: vue-app
+    ports:
+      - "80:80"
+    depends_on:
+      - app
 
   nginx:
     image: nginx:latest
