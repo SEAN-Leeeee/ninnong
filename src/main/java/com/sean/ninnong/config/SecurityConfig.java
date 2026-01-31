@@ -37,7 +37,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/**",
-                                "/api/register/**",
                                 "/api/files",
                                 "/uploads/**",
                                 // -- Swagger UI 경로 추가
