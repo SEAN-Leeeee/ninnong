@@ -37,6 +37,7 @@ services:
       - LOGGING_LEVEL_ORG_HIBERNATE_SQL=DEBUG
     volumes:
       - ./uploads:/app/uploads
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - mysql
 
