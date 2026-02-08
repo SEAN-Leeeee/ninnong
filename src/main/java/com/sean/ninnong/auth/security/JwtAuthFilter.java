@@ -33,7 +33,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String method = request.getMethod();
 
         if ("OPTIONS".equalsIgnoreCase(method)) return true;
-        // /api/auth/ 로 시작하는 모든 경로 허용
+
         return path.startsWith("/api/auth/") ||
                 path.startsWith("/swagger-ui/") ||
                 path.startsWith("/v3/api-docs/") ||

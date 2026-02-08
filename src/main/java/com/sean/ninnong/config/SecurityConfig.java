@@ -39,7 +39,7 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/api/files",
                                 "/uploads/**",
-                                // -- Swagger UI 경로 추가
+                                "/error",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**"
