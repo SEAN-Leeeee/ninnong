@@ -133,21 +133,30 @@ export default {
 
 
 <style scoped>
+/* ========== Container ========== */
 .myteam-container {
-  padding: 20px;
+  padding: 0px 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-bottom: 10px;
 }
 
+/* ========== Team Header ========== */
 .team-header-box {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  background: #fff;
-  padding: 24px;
+  background: #FFFFFF;
+  padding: 20px 84px;
+  margin: 0;
+  margin-top: 16px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .team-header-left {
@@ -159,9 +168,9 @@ export default {
 .team-logo {
   width: 80px;
   height: 80px;
-  border-radius: 50%;
+  border-radius: 12px;
   object-fit: cover;
-  border: 2px solid #eee;
+  border: 1px solid #E5E7EB;
 }
 
 .team-text-info {
@@ -170,22 +179,25 @@ export default {
 }
 
 .team-name {
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
   margin: 0;
 }
 
 .team-member-count {
-  font-size: 14px;
-  color: #555;
+  font-size: 13px;
+  color: #6B7280;
   margin: 4px 0;
+  font-weight: 400;
 }
 
 .team-description {
   font-size: 14px;
-  color: #777;
+  color: #6B7280;
   margin-top: 8px;
   max-width: 400px;
+  font-weight: 400;
 }
 
 .team-header-right {
@@ -196,54 +208,64 @@ export default {
 .team-map-box {
   width: 300px;
   height: 120px;
-  background: #f5f5f5;
+  background: #F9FAFB;
   border-radius: 8px;
+  border: 1px solid #E5E7EB;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #999;
+  color: #6B7280;
+  font-size: 13px;
 }
 
+/* ========== Content Area ========== */
 .team-content-box {
   display: flex;
-  gap: 20px;
+  gap: 24px;
 }
 
+/* ========== Sidebar ========== */
 .community-sidebar {
-    width: 190px;
-    min-width: 190px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
+  width: 190px;
+  min-width: 190px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .button {
-    background: none;
-    border: none;
-    text-align: left;
-    font-size: 17px;
-    font-weight: 700;
-    padding: 10px 18px;
-    width: 100%;
-    color: #94a3b8;
-    cursor: pointer;
-    border-radius: 10px;
-    transition: background 0.2s, color 0.2s;
-    margin-bottom: 2px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 16px;
+  width: 100%;
+  color: #6B7280;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
 }
 
-.button:hover,
+.button:hover {
+  background: #EFF6FF;
+  color: #111827;
+}
+
 .button.active {
-    background: #f1f5f9;
-    color: #2563eb;
-    font-weight: 700;
+  background: #EFF6FF;
+  color: #3B82F6;
+  font-weight: 700;
 }
 
+/* ========== Main Panel ========== */
 .team-panel {
   flex: 1;
-  background: #fff;
-  padding: 24px;
+  background: #FFFFFF;
+  padding: 20px 24px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 </style>

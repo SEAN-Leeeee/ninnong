@@ -150,3 +150,191 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/* ========== Modal Overlay ========== */
+.team-board-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ========== Modal Box ========== */
+.team-board-modal {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  padding: 20px 24px;
+  max-width: 460px;
+  width: 90%;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.team-board-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #6B7280;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+}
+
+.team-board-close-btn:hover {
+  color: #111827;
+}
+
+/* ========== Logo Banner ========== */
+.team-board-logo-banner {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.team-board-logo-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ========== Info ========== */
+.team-board-info {
+  font-size: 14px;
+  color: #111827;
+  line-height: 1.8;
+}
+
+.team-board-info p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #111827;
+}
+
+.team-board-info p strong {
+  color: #111827;
+  font-weight: 700;
+}
+
+.team-board-info p:first-child {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+/* ========== Actions ========== */
+.team-board-actions {
+  margin-top: 24px;
+}
+
+.team-join-button {
+  width: 100%;
+  background-color: #3B82F6;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.team-join-button:hover {
+  background-color: #2563EB;
+}
+
+.team-join-button:disabled {
+  background-color: #E5E7EB;
+  color: #9CA3AF;
+  cursor: not-allowed;
+}
+
+/* ========== Request Modal ========== */
+.request-modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 16px;
+}
+
+.request-modal-content {
+  text-align: left;
+}
+
+.request-profile {
+  font-size: 14px;
+  color: #111827;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.request-textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  resize: none;
+  margin: 16px 0;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  outline: none;
+  color: #111827;
+  box-sizing: border-box;
+}
+
+.request-textarea:focus {
+  border-color: #3B82F6;
+}
+
+.request-textarea::placeholder {
+  color: #9CA3AF;
+}
+
+.request-button-row {
+  display: flex;
+  gap: 12px;
+}
+
+.request-cancel-button,
+.request-submit-button {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.request-cancel-button {
+  background-color: #FFFFFF;
+  color: #111827;
+  border: 1px solid #E5E7EB;
+}
+
+.request-cancel-button:hover {
+  background-color: #F9FAFB;
+}
+
+.request-submit-button {
+  background-color: #3B82F6;
+  color: #FFFFFF;
+}
+
+.request-submit-button:hover {
+  background-color: #2563EB;
+}
+</style>

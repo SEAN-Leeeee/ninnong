@@ -237,6 +237,11 @@ export default {
 </script>
 
 <style scoped>
+.community-wrapper {
+  padding: 16px 24px;
+  margin-top: 30px;
+}
+
 .no-post-message {
   text-align: center;
   padding: 20px;

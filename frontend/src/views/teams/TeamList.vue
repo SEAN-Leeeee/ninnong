@@ -2,11 +2,7 @@
   <div class="team-section">
 
     <div class="team-list-header">
-      <ShinyText
-          text="팀 목록"
-          :disabled="false"
-          :speed="3"
-      />
+      <h2 class="team-list-title">팀 목록</h2>
       <div class="filter-row">
         <select v-model="selectedLocation">
           <option value="">전체 지역</option>
@@ -48,7 +44,13 @@
         </div>
       </div>
 
-
+      <div
+          class="team-card empty-card"
+          v-for="n in emptyCardCount"
+          :key="'empty-' + n"
+      >
+        <img src="@/assets/image/코트.png" alt="빈 카드" />
+      </div>
     </div>
 
     <SelectedTeam
@@ -72,17 +74,13 @@
 import SelectedTeam from "@/views/teams/SelectedTeam.vue";
 import TeamCreateModal from "@/views/teams/TeamCreateModal.vue";
 import { useUserStore } from '@stores/user.js'
-import ShinyText from "../../../component/ShinyText/ShinyText.vue"
-
-
 import api from "@/axios.js";
 
 export default {
   name: "TeamList",
   components: {
     SelectedTeam,
-    TeamCreateModal,
-    ShinyText
+    TeamCreateModal
   },
   data() {
     return {
@@ -116,6 +114,11 @@ export default {
             !this.filterRecruiting || team.isRecruitingMembers;
         return locationMatch && recruitingMatch;
       });
+    },
+    emptyCardCount() {
+      const totalCards = (this.isNotInTeam ? 1 : 0) + this.filteredTeams.length;
+      const minCards = totalCards <= 8 ? 8 : Math.ceil(totalCards / 4) * 4;
+      return minCards - totalCards;
     },
     locations() {
       let regions = this.teams.filter(team => team.region !== "")
@@ -159,23 +162,179 @@ export default {
 </script>
 
 <style scoped>
+/* ========== TeamList Section ========== */
+.team-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 30px;
+  padding: 16px 24px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.team-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.team-list-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+/* ========== Filters ========== */
+.filter-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.filter-row select,
+.filter-row button {
+  height: 40px;
+  line-height: 38px;
+  padding: 0 14px;
+  margin: 0;
+  font-size: 14px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  color: #111827;
+  outline: none;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: all 0.2s;
+  vertical-align: middle;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.filter-row select {
+  padding-right: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.filter-row button {
+  color: #6B7280;
+  font-weight: 400;
+}
+
+.filter-row select:focus {
+  border-color: #3B82F6;
+}
+
+.filter-row button:hover {
+  background-color: #F9FAFB;
+}
+
+.filter-row button.active {
+  background-color: #3B82F6;
+  color: #FFFFFF;
+  border-color: #3B82F6;
+  font-weight: 600;
+}
+
+/* ========== Team Cards ========== */
+.team-card-container {
+  display: grid;
+  grid-template-columns: repeat(4, 260px);
+  gap: 24px;
+  padding: 0;
+  justify-content: center;
+}
+
+.team-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  max-width: 260px;
+  width: 100%;
+}
+
+.team-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.team-card img {
+  width: 100%;
+  height: 144px;
+  object-fit: cover;
+  background-color: #F9FAFB;
+  display: block;
+}
+
+.team-card-content {
+  padding: 12px 16px;
+}
+
+.team-card-content h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 6px 0;
+}
+
+.team-card-content p {
+  font-size: 12px;
+  color: #6B7280;
+  margin: 2px 0;
+  font-weight: 400;
+}
+
+/* ========== Create Card ========== */
 .team-card.create-card {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  border: 2px dashed #ccc;
-  background-color: #f9f9f9;
+  border: 2px dashed #E5E7EB;
+  background-color: #F9FAFB;
+  min-height: 208px;
+  box-shadow: none;
 }
 
 .team-card.create-card:hover {
-  background-color: #f1f1f1;
+  background-color: #EFF6FF;
+  border-color: #3B82F6;
 }
 
 .team-card-content.create-content {
   text-align: center;
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #555;
+  font-size: 16px;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+/* ========== Empty Card ========== */
+.team-card.empty-card {
+  background-color: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  box-shadow: none;
+  cursor: default;
+  overflow: hidden;
+  height: 300px;
+}
+
+.team-card.empty-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+}
+
+.team-card.empty-card:hover {
+  box-shadow: none;
 }
 </style>

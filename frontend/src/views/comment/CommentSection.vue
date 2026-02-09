@@ -79,11 +79,23 @@ const handleAddComment = async (content) => {
       postId: props.postId,
       parentId: null,
     });
-    // Optimistic update: Add to the list
-    comments.value.push(res.data); // Assuming API returns the new comment
+
+    const newCommentFromServer = res.data;
+    const currentUser = userStore.currentUser;
+
+    const newEntry = {
+      id: newCommentFromServer.id,
+      content: newCommentFromServer.content || content,
+      createdAt: newCommentFromServer.createdAt || new Date().toISOString(),
+      writerId: currentUser.id,
+      writerNickname: currentUser.nickname,
+      isDeleted: false,
+      children: [],
+    };
+
+    comments.value.push(newEntry);
   } catch (e) {
     console.error('댓글 작성 중 오류가 발생했습니다.', e);
-    // Optionally show a user-facing error message
   }
 };
 
