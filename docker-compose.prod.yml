@@ -1,0 +1,5 @@
+services:
+  app:
+    image: spring-ninnong
+    env_file:
+      - .env.prod
