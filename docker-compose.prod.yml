@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   app:
     build:
@@ -6,26 +8,30 @@ services:
     container_name: spring-ninnong
     ports:
       - "8080:8080"
+
+    # 🔴 핵심: env_file 명시
+    env_file:
+      - .env.prod
+
     environment:
-      # --- Spring Boot DB 연결 정보 ---
-      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      # Spring profile
+      SPRING_PROFILES_ACTIVE: prod
 
-      # --- JWT 설정 정보 ---
-      - JWT_ISSUER=${JWT_ISSUER}
-      - JWT_ACCESS_TOKEN_KEY=${JWT_ACCESS_TOKEN_KEY}
-      - JWT_REFRESH_TOKEN_KEY=${JWT_REFRESH_TOKEN_KEY}
-      - JWT_ACCESS_TOKEN_TTL=${JWT_ACCESS_TOKEN_TTL}
-      - JWT_REFRESH_TOKEN_TTL=${JWT_REFRESH_TOKEN_TTL}
+      # JPA
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
 
-      # --- 로깅 설정 ---
-      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_TRANSACTION=DEBUG
-      - LOGGING_LEVEL_ORG_HIBERNATE_SQL=DEBUG
-      - SPRING_APPLICATION_JSON={"file":{"upload-dir":"/app/uploads"}}
+      # Logging
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_TRANSACTION: DEBUG
+      LOGGING_LEVEL_ORG_HIBERNATE_SQL: DEBUG
+
+      # File upload
+      SPRING_APPLICATION_JSON: >
+        {"file":{"upload-dir":"/app/uploads"}}
+
     volumes:
       - ./uploads:/app/uploads
+
+    restart: always
 
   frontend:
     build:
@@ -40,3 +46,4 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - app
+    restart: always
