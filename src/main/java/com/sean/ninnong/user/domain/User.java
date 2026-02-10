@@ -36,27 +36,20 @@ public class User  {
     private String email;
     @Column(nullable = false)
     private String name;
-
     @Column(nullable = false)
     private String nickname;
-
     @Column(nullable = false)
     private String password;
-
     @Column(nullable = false)
     private UserStatus status;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DraftLevel draftLevel;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SystemRole role;
-
     @Column(nullable = false)
     private LocalDateTime createdAt;
-
     private LocalDateTime deletedAt;
 
     @Column(name="active_flag", insertable = false, updatable = false)

@@ -35,6 +35,7 @@
       </aside>
 
       <main class="team-panel">
+        <JoinRequestsPanel v-if="selectedTab === 'joinRequests' && isLeader" />
         <MemberManage
             v-if="selectedTab === 'member'"
             :memberList="memberList"
@@ -59,9 +60,11 @@ import AttendancePanel from './Activities.vue'
 import VideoPanel from './VideoPanel.vue'
 import MemberManage from './Members.vue'
 import FeePanel from './FeePanel.vue'
+import JoinRequestsPanel from './JoinRequestsPanel.vue'
 export default {
   name: 'MyTeam',
   components: {
+    JoinRequestsPanel,
     MemberManage,
     AttendancePanel,
     VideoPanel,
@@ -73,6 +76,7 @@ export default {
       memberList:[],
       selectedTab: 'member',
       tabs: [
+        { label: '가입 요청', value: 'joinRequests' },
         { label: '멤버', value: 'member' },
         // { label: '활동', value: 'activities' },
         // { label: '영상', value: 'video' },

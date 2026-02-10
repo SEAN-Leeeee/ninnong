@@ -5,6 +5,7 @@ import com.sean.ninnong.application.dto.ApplicationRequest;
 import com.sean.ninnong.application.dto.ApplicationResponse;
 import com.sean.ninnong.application.teamApplication.domain.TeamApplication;
 import com.sean.ninnong.application.teamApplication.dto.ApplicationDecisionRequest;
+import com.sean.ninnong.application.teamApplication.dto.UserApplication;
 import com.sean.ninnong.application.teamApplication.repository.TeamApplicationRepository;
 import com.sean.ninnong.common.enums.ApplicationStatus;
 import com.sean.ninnong.exception.ApplicationNotFoundException;
@@ -56,8 +57,8 @@ public class TeamApplicationServiceImpl implements TeamApplicationService{
     }
 
     @Override
-    public List<ApplicationResponse> getTeamApplications(Long teamId) {
-        return teamApplicationRepository.findByTeamIdAndStatus(teamId, ApplicationStatus.PENDING)
+    public List<UserApplication> getTeamApplications(Long teamId) {
+        return teamApplicationRepository.findByTeamId(teamId)
                 .stream()
                 .map(TeamApplication::toResponse)
                 .collect(Collectors.toList());

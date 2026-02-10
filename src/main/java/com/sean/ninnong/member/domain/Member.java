@@ -4,6 +4,7 @@ import com.sean.ninnong.common.enums.MemberPosition;
 import com.sean.ninnong.common.enums.MemberStatus;
 import com.sean.ninnong.common.enums.Role;
 import com.sean.ninnong.member.dto.MemberInfo;
+import com.sean.ninnong.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -21,8 +22,10 @@ public class Member {
 
     @Column(nullable = false)
     private Long teamId;
-    @Column(nullable = false)
-    private Long userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
     private int backNumber;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -34,25 +37,25 @@ public class Member {
     @Column(nullable = false)
     private MemberStatus status;
     @Column(nullable = false)
-    private LocalDate joinedAt;
+    private LocalDateTime joinedAt;
     @Column(nullable = false)
     private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
 
-    public Member(Long teamId, Long userId) {
+    public Member(Long teamId, User user) {
         this.teamId = teamId;
-        this.userId = userId;
+        this.user = user;
         this.backNumber = 0;
         this.position = MemberPosition.NONE;
         this.role = Role.MEMBER;
-        this.joinedAt = LocalDate.now();
+        this.joinedAt = LocalDateTime.now();
         this.createdAt = LocalDateTime.now();
         this.status = MemberStatus.ACTIVE;
         this.deletedAt = null;
     }
 
-    public static Member create(Long teamId, Long userId) {
-        return new Member(teamId, userId);
+    public static Member create(Long teamId, User user) {
+        return new Member(teamId, user);
     }
 
     public void asLeader() {
@@ -82,7 +85,7 @@ public class Member {
     }
 
     public Long getUserId() {
-        return userId;
+        return user.getId();
     }
 
     public Role getRole() {
@@ -93,8 +96,12 @@ public class Member {
         return backNumber;
     }
 
-    public LocalDate getJoinedAt() {
+    public LocalDateTime getJoinedAt() {
         return joinedAt;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override
@@ -102,7 +109,7 @@ public class Member {
         return "@@ Member{" +
                 "id=" + id +
                 ", teamId=" + teamId +
-                ", userId=" + userId +
+                ", userId=" + user.getId() +
                 ", backNumber=" + backNumber +
                 ", position=" + position +
                 ", joinedAt=" + joinedAt +

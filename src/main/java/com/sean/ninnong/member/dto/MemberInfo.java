@@ -4,9 +4,9 @@ import com.sean.ninnong.common.enums.DraftLevel;
 import com.sean.ninnong.common.enums.MemberPosition;
 import com.sean.ninnong.common.enums.Role;
 import com.sean.ninnong.member.domain.Member;
-import com.sean.ninnong.user.dto.UserInfo;
+import com.sean.ninnong.user.domain.User;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record MemberInfo(
         Long userId,
@@ -15,19 +15,18 @@ public record MemberInfo(
         Role role,
         MemberPosition position,
         DraftLevel draftLevel,
-        LocalDate joinedAt){
+        LocalDateTime joinedAt){
 
 
-    public static MemberInfo of(Member member, UserInfo userInfo) {
-        return new MemberInfo(
-                userInfo.getId(),
-                userInfo.getName(),
-                member.getBackNumber(),
-                member.getRole(),
-                member.getPosition(),
-                userInfo.getDraftLevel(),
-                member.getJoinedAt()
+    public static MemberInfo from(Member m) {
+        User user = m.getUser();
+        return new MemberInfo(user.getId(),
+                user.getName(),
+                m.getBackNumber(),
+                m.getRole(),
+                m.getPosition(),
+                user.getDraftLevel(),
+                m.getJoinedAt()
         );
     }
-
 }

@@ -1,6 +1,7 @@
 package com.sean.ninnong.team.dto;
 
 
+import com.sean.ninnong.region.domain.Region;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 

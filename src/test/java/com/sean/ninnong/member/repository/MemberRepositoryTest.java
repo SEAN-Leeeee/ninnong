@@ -1,6 +1,7 @@
 package com.sean.ninnong.member.repository;
 
 import com.sean.ninnong.member.domain.Member;
+import com.sean.ninnong.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ class MemberRepositoryTest {
     @Test
     void findTeamWithUserId() {
         //given
-        Member member = Member.create(1L, 1L);
+        Member member = Member.create(1L, User);
         memberRepository.save(member);
         memberRepository.flush();
 

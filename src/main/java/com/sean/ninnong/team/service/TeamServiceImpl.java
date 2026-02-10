@@ -56,7 +56,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public void makeLeader(Long teamId, Long userId) {
-        Member member = memberRepository.findByUserIdAndTeamId(userId, teamId)
+        Member member = memberRepository.findByUser_IdAndTeamId(userId, teamId)
                 .orElseThrow(() -> new TeamMemberNotFoundException(teamId, userId));
         member.asLeader();
     }

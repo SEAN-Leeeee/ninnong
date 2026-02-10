@@ -25,6 +25,8 @@
 
 <script>
 import { useUserStore } from '@stores/user.js'
+import api from "@/axios.js";
+import {watch} from "vue";
 
 
 export default {
@@ -32,8 +34,10 @@ export default {
     return {
       lastScrollY: 0,
       isHidden: false,
+      applications: []
     };
   },
+
   computed: {
     isLoggedIn() {
       return localStorage.getItem('accessToken');
@@ -45,6 +49,7 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
+    this.checkGotApplication()
   },
   beforeUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
@@ -64,7 +69,18 @@ export default {
       const userStore = useUserStore();
       await userStore.logout();
       this.$router.push('/login');
-    }
+    },
+    async checkGotApplication() {
+      try {
+        const res = await api.get(`/teamApplication/${this.user.teamId}`);
+        this.applications = res.data;
+        console.log("myApplication");
+        console.log(res.data);
+      }  catch (err) {
+        const msg = err.response?.data?.message || '오류가 발생했습니다. 관리자에게 문의하세요';
+        alert(msg);
+      }
+    },
   }
 }
 </script>

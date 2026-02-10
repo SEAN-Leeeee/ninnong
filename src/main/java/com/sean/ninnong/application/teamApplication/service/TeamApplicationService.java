@@ -3,6 +3,7 @@ package com.sean.ninnong.application.teamApplication.service;
 import com.sean.ninnong.application.dto.ApplicationRequest;
 import com.sean.ninnong.application.dto.ApplicationResponse;
 import com.sean.ninnong.application.teamApplication.dto.ApplicationDecisionRequest;
+import com.sean.ninnong.application.teamApplication.dto.UserApplication;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface TeamApplicationService {
 
     ApplicationResponse findMyApplication(Long applicationId);
 
-    List<ApplicationResponse> getTeamApplications(Long teamId);
+    List<UserApplication> getTeamApplications(Long teamId);
 
     @Transactional
     void responseTo(Long teamId, ApplicationDecisionRequest request, Long charge);

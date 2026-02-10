@@ -1,15 +1,13 @@
 package com.sean.ninnong.member.service;
 
 
-import com.sean.ninnong.common.enums.MemberStatus;
 import com.sean.ninnong.common.enums.Role;
 import com.sean.ninnong.exception.UnauthorizedTeamAccessException;
 import com.sean.ninnong.member.domain.Member;
 import com.sean.ninnong.member.dto.MemberInfo;
 import com.sean.ninnong.member.repository.MemberRepository;
 import com.sean.ninnong.user.domain.User;
-import com.sean.ninnong.user.dto.UserInfo;
-import com.sean.ninnong.user.dto.UserReader;
+import com.sean.ninnong.user.repository.UserRepository;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,17 +21,20 @@ import static com.sean.ninnong.common.enums.MemberStatus.ACTIVE;
 @Service
 public class MemberServiceImpl implements MemberService, MemberReader {
     private final MemberRepository memberRepository;
-    private final UserReader userReader;
+    private final UserRepository userRepository;
 
-    public MemberServiceImpl(MemberRepository memberRepository, UserReader userReader) {
+    public MemberServiceImpl(MemberRepository memberRepository, UserRepository userRepository) {
         this.memberRepository = memberRepository;
-        this.userReader = userReader;
+        this.userRepository = userRepository;
     }
 
     @Override
     public Member add(Long teamId, Long userId) {
-        Member member = Member.create(teamId, userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("유저가 없습니다."));
+        Member member = Member.create(teamId, user);
         memberRepository.save(member);
+
         return member;
     }
 
@@ -47,33 +48,16 @@ public class MemberServiceImpl implements MemberService, MemberReader {
     public List<MemberInfo> getMemberList(Long teamId) {
         List<Member> memberList = memberRepository.findByTeamIdAndStatusOrderByBackNumber(teamId, ACTIVE);
 
-        List<Long> memberIdList = memberList.stream()
-                .map(Member::getUserId).toList();
-
-        List<User> userList = userReader.getUserInfoList(memberIdList);
-        List<UserInfo> userInfoList = userList.stream()
-                                        .map(UserInfo::of)
-                                        .toList();
-
-        Map<Long, UserInfo> userInfoMap = userInfoList.stream()
-                                                .collect(Collectors.toMap(UserInfo::getId, userInfo ->  userInfo));
-
         return memberList.stream()
-                .map(member -> {
-                    UserInfo userInfo = userInfoMap.get(member.getUserId());
-                    if (userInfo == null) {
-                        throw new IllegalStateException("UserInfo is missing for userId = " + member.getUserId());
-                    }
-                    return MemberInfo.of(member, userInfo);
-                })
+                .map(MemberInfo::from)
                 .toList();
-
     }
+
 
     @Transactional
     @Override
     public void updateMembersInfo(Long teamId, List<MemberInfo> updateMembersInfo, Long userId) {
-        Member editor = memberRepository.findByUserIdAndTeamId(userId, teamId)
+        Member editor = memberRepository.findByUser_IdAndTeamId(userId, teamId)
                 .orElseThrow(() -> new UnauthorizedTeamAccessException(teamId));
 
         if (editor.getRole() != Role.LEADER) {
