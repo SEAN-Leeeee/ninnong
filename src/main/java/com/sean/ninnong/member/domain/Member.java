@@ -58,6 +58,7 @@ public class Member {
         return new Member(teamId, user);
     }
 
+
     public void asLeader() {
         this.role = Role.LEADER;
     }
