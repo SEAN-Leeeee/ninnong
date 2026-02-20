@@ -1,4 +1,6 @@
-<img width="32" height="17" alt="image" src="https://github.com/user-attachments/assets/04dff5bd-0a09-4395-ae24-8d2b08b25528" />![header](https://capsule-render.vercel.app/api?type=blur&height=300&color=gradient&text=NINNong&strokeWidth=2&fontAlign=50&stroke=E0E0E0&fontSize=55&textBg=false)
+![header](https://capsule-render.vercel.app/api?type=blur&height=300&color=gradient&text=NINNong&strokeWidth=2&fontAlign=50&stroke=E0E0E0&fontSize=55&textBg=false)
+
+
 # 🏀 NinNong (즐농)
 
 > 농구 동호인을 위한 팀 관리 플랫폼  
