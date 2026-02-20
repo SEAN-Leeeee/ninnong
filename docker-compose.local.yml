@@ -1,7 +1,6 @@
 services:
   mysql:
     image: mysql:8.0
-    profiles: [ "local" ]
     container_name: mysql-ninnong
     ports:
       - "3307:3306"

@@ -5,6 +5,7 @@ import com.sean.ninnong.application.dto.ApplicationResponse;
 import com.sean.ninnong.application.dto.ApplicationResponseMsg;
 import com.sean.ninnong.application.teamApplication.service.TeamApplicationService;
 import com.sean.ninnong.application.teamApplication.dto.ApplicationDecisionRequest;
+import com.sean.ninnong.application.teamApplication.dto.UserApplication;
 import com.sean.ninnong.auth.security.UserPrincipal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -51,8 +52,8 @@ public class TeamApplicationController {
     }
 
     @GetMapping("/{teamId}")
-    public ResponseEntity<List<ApplicationResponse>> getTeamApplications(@AuthenticationPrincipal UserPrincipal user, @PathVariable Long teamId) {
-        List<ApplicationResponse> response = teamApplicationService.getTeamApplications(teamId);
+    public ResponseEntity<List<UserApplication>> getTeamApplications(@AuthenticationPrincipal UserPrincipal user, @PathVariable Long teamId) {
+        List<UserApplication> response = teamApplicationService.getTeamApplications(teamId);
 
         return ResponseEntity.ok(response);
     }

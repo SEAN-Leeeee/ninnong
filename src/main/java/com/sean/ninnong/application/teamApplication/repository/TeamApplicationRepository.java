@@ -20,11 +20,10 @@ public interface TeamApplicationRepository extends JpaRepository<TeamApplication
 
     Optional<TeamApplication> findByApplicantAndStatus(Long application, ApplicationStatus status);
 
-    @Query("SELECT new com.sean.ninnong.application.teamApplication.dto.UserApplication(u.name, u.draftLevel, a.requestMsg, a.requestAt, a.status) " +
-            "FROM TeamApplication ta " +
-            "JOIN User u ON ta.userId = u.id " +
-            "JOIN Application a ON ta.applicationId = a.id " +
-            "WHERE ta.teamId = :teamId")
+    @Query("SELECT new com.sean.ninnong.application.teamApplication.dto.UserApplication(u.name, u.draftLevel, ta.requestMsg, ta.requestAt, ta.status) " +
+            "FROM TeamApplication ta, User u " +
+            "WHERE ta.applicant = u.id " +
+            "AND ta.teamId = :teamId")
     List<UserApplication> findUserApplicationsByTeamId(@Param("teamId") Long teamId);
     List<TeamApplication> findApplicationsByTeamId(@Param("teamId") Long teamId);
 

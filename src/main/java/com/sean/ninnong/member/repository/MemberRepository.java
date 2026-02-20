@@ -29,10 +29,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Long findTeamIdByUserId(@Param("userId") Long userId);
 
 
-    @Query("SELECT m FROM Member m" +
-            "JOIN FETCH m.user" +
-            "WHERE m.teamId = :teamId" +
-            "AND m.status = :status" +
+    @Query("SELECT m FROM Member m " +
+            "JOIN FETCH m.user " +
+            "WHERE m.teamId = :teamId " +
+            "AND m.status = :status " +
             "ORDER BY m.backNumber")
     List<Member> findByTeamIdAndStatusOrderByBackNumber(Long teamId, MemberStatus active);
 

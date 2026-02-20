@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TeamApplicationServiceImpl implements TeamApplicationService{
@@ -58,10 +57,7 @@ public class TeamApplicationServiceImpl implements TeamApplicationService{
 
     @Override
     public List<UserApplication> getTeamApplications(Long teamId) {
-        return teamApplicationRepository.findByTeamId(teamId)
-                .stream()
-                .map(TeamApplication::toResponse)
-                .collect(Collectors.toList());
+        return teamApplicationRepository.findUserApplicationsByTeamId(teamId);
     }
 
     @Override
