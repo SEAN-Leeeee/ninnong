@@ -7,11 +7,13 @@ import com.sean.ninnong.post.domain.Post;
 import com.sean.ninnong.post.dto.PostRequest;
 import com.sean.ninnong.post.dto.PostResponse;
 import com.sean.ninnong.post.repository.PostRepository;
+import com.sean.ninnong.user.domain.User;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import com.sean.ninnong.user.repository.UserRepository;
 import java.util.Optional;
 
 @Service
@@ -19,10 +21,12 @@ public class PostServiceImpl implements PostService {
 
     private final PostImageService postImageService;
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public PostServiceImpl(PostImageService postImageService, PostRepository postRepository) {
+    public PostServiceImpl(PostImageService postImageService, PostRepository postRepository, UserRepository userRepository) {
         this.postImageService = postImageService;
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     private void checkOwnership(Long postId, Long currentUserId) {
@@ -33,17 +37,31 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    @Transactional
-    public Long createPost(PostRequest request, Long writer) {
-        Post post = Post.create(request, writer);
-        postRepository.save(post);
-        Optional.ofNullable(request.getImageUrls())
-                .filter(list -> !list.isEmpty())
-                .ifPresent(list -> postImageService.create(request.getImageUrls(), post.getId(), writer));
+        @Transactional
 
-        return post.getId();
+        public Long createPost(PostRequest request, Long creatorId) {
 
-    }
+            User writer = userRepository.findById(creatorId)
+
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+    
+
+            Post post = Post.create(request, writer);
+
+            postRepository.save(post);
+
+            Optional.ofNullable(request.getImageUrls())
+
+                    .filter(list -> !list.isEmpty())
+
+                    .ifPresent(list -> postImageService.create(request.getImageUrls(), post.getId(), creatorId));
+
+    
+
+            return post.getId();
+
+        }
 
     @Override
     public List<PostSummaryResponse> getPostList() {

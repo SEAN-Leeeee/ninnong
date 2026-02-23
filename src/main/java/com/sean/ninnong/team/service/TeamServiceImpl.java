@@ -10,6 +10,8 @@ import com.sean.ninnong.member.repository.MemberRepository;
 import com.sean.ninnong.member.service.MemberService;
 import com.sean.ninnong.member.repository.projection.TeamMemberCount;
 import com.sean.ninnong.team.repository.TeamRepository;
+import com.sean.ninnong.user.domain.User;
+import com.sean.ninnong.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -23,14 +25,19 @@ public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
     private final MemberService memberService;
+    private final UserRepository userRepository;
 
-    public TeamServiceImpl(TeamRepository teamRepository,
-                           MemberRepository memberRepository,
-                           MemberService memberService) {
+    public TeamServiceImpl(TeamRepository teamRepository, MemberRepository memberRepository, MemberService memberService, UserRepository userRepository) {
         this.teamRepository = teamRepository;
         this.memberRepository = memberRepository;
         this.memberService = memberService;
+        this.userRepository = userRepository;
     }
+
+    public User getUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(""));
+    }
+
 
     private Team findTeamByIdOrElseThrow(Long id) {
         return teamRepository.findById(id)
@@ -38,33 +45,35 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Team of(TeamInfoRequest teamInfo, Long creatorId) {
-        Team team = Team.createTeam(teamInfo, creatorId);
+    public Team of(TeamInfoRequest teamInfo, User user) {
+        Team team = Team.createTeam(teamInfo, user);
         teamRepository.save(team);
         return team;
     }
 
     @Override
-    public Long createTeam(TeamInfoRequest request, Long userId) {
-        Team team = of(request, userId);
-        memberService.add(team.getId(), userId);
+    public Long createTeam(TeamInfoRequest request, Long creatorId) {
+        User creator = getUser(creatorId);
 
-        makeLeader(team.getId(), userId);
+        Team team = of(request, creator);
+        memberService.add(team.getId(), creator.getId());
+
+        makeLeader(team.getId(), creator);
 
         return team.getId();
     }
 
     @Override
-    public void makeLeader(Long teamId, Long userId) {
-        Member member = memberRepository.findByUser_IdAndTeamId(userId, teamId)
-                .orElseThrow(() -> new TeamMemberNotFoundException(teamId, userId));
+    public void makeLeader(Long teamId, User newLeader) {
+        Member member = memberRepository.findByUser_IdAndTeam_Id(newLeader.getId(), teamId)
+                .orElseThrow(() -> new TeamMemberNotFoundException(teamId, newLeader.getId()));
         member.asLeader();
     }
 
     @Override
     public TeamResponse getTeam(Long id) {
         Team team = teamRepository.findById(id).orElseThrow(() -> new TeamNotFoundException(id));
-        int memberCount = memberRepository.countByTeamId(team.getId());
+        int memberCount = memberRepository.countByTeam_Id(team.getId());
 
         return TeamResponse.of(team, memberCount);
     }

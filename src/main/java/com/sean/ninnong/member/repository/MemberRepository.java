@@ -17,24 +17,24 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
 
-    Optional<Member> findByUser_IdAndTeamId(Long userId, Long teamId);
+    Optional<Member> findByUser_IdAndTeam_Id(Long userId, Long teamId);
 
-    int countByTeamId(Long teamId);
+    int countByTeam_Id(Long teamId);
 
-    @Query("SELECT m.teamId AS teamId, COUNT(m) AS count FROM Member m GROUP BY m.teamId")
+    @Query("SELECT m.team.id AS teamId, COUNT(m) AS count FROM Member m GROUP BY m.team.id")
     List<TeamMemberCount> countGroupedByTeamId();
 
     @Transactional(readOnly = true)
-    @Query("SELECT m.teamId FROM Member m WHERE m.user.id = :userId")
+    @Query("SELECT m.team.id FROM Member m WHERE m.user.id = :userId")
     Long findTeamIdByUserId(@Param("userId") Long userId);
 
 
     @Query("SELECT m FROM Member m " +
             "JOIN FETCH m.user " +
-            "WHERE m.teamId = :teamId " +
+            "WHERE m.team.id = :teamId " +
             "AND m.status = :status " +
             "ORDER BY m.backNumber")
-    List<Member> findByTeamIdAndStatusOrderByBackNumber(Long teamId, MemberStatus active);
+    List<Member> findByTeam_IdAndStatusOrderByBackNumber(Long teamId, MemberStatus active);
 
     List<Member> findByIdIn(List<Long> memberIdList);
 

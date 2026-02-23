@@ -16,17 +16,18 @@ public class PostImage {
     @Column(nullable = false, length = 500)
     private String url;
     @Column(nullable = false)
-    private Long postId;
+    @ManyToOne
+    private Post post;
     @Column(nullable = false)
     private Long writer;
 
-    public PostImage(String url, Long postId, Long writer) {
+    public PostImage(String url, Post post, Long writer) {
         this.url = url;
-        this.postId = postId;
+        this.post = post;
         this.writer = writer;
     }
 
-    public static PostImage of(String url, Long postId, Long writer) {
-        return new PostImage(url, postId, writer);
+    public static PostImage of(String url, Post post, Long writer) {
+        return new PostImage(url, post, writer);
     }
 }

@@ -1,10 +1,14 @@
 package com.sean.ninnong.comment.service;
 
+import com.sean.ninnong.comment.domain.Comment;
 import com.sean.ninnong.comment.dto.ChildCommentResponse;
 import com.sean.ninnong.comment.dto.CommentRequest;
 import com.sean.ninnong.comment.dto.CommentThreadResponse;
+import com.sean.ninnong.comment.repository.CommentRepository;
 import com.sean.ninnong.common.enums.PostSubject;
+import com.sean.ninnong.post.domain.Post;
 import com.sean.ninnong.post.dto.PostRequest;
+import com.sean.ninnong.post.repository.PostRepository;
 import com.sean.ninnong.post.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,12 +32,19 @@ class CommentQueryServiceImplTest {
     CommentService commentService;
     @Autowired
     CommentQueryService commentQueryService;
+    @Autowired
+    PostRepository postRepository;
+    @Autowired
+    CommentRepository commentRepository;
 
     Long createComment(String content, Long parentId, Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow();
+        Comment parentComment = (parentId != null) ? commentRepository.findById(parentId).orElse(null) : null; // Use orElse(null) instead of orElseThrow for parentComment
+
         return  commentService.createComment(CommentRequest.builder()
                 .content(content)
-                .postId(postId)
-                .parentId(parentId)
+                .post(post)
+                .parent(parentComment)
                 .isDeleted(false)
                 .build(), 1L);
     }

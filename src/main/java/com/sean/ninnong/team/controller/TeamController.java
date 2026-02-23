@@ -5,6 +5,8 @@ import com.sean.ninnong.team.service.TeamService;
 import com.sean.ninnong.team.dto.TeamInfoRequest;
 import com.sean.ninnong.team.dto.TeamResponse;
 import com.sean.ninnong.team.dto.TeamMsgResponse;
+import com.sean.ninnong.user.domain.User;
+import com.sean.ninnong.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,8 +18,8 @@ import java.util.List;
 @RequestMapping("/api/teams")
 public class TeamController {
 
-
     private final TeamService teamService;
+
 
     public TeamController(TeamService teamService) {
         this.teamService = teamService;

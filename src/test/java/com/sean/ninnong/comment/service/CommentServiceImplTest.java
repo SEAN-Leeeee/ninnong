@@ -3,7 +3,9 @@ package com.sean.ninnong.comment.service;
 import com.sean.ninnong.comment.domain.Comment;
 import com.sean.ninnong.comment.dto.CommentRequest;
 import com.sean.ninnong.common.enums.PostSubject;
+import com.sean.ninnong.post.domain.Post;
 import com.sean.ninnong.post.dto.PostRequest;
+import com.sean.ninnong.post.repository.PostRepository;
 import com.sean.ninnong.post.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,19 +24,18 @@ class CommentServiceImplTest {
 
     @Autowired
     PostService postService;
-
     @Autowired
     CommentService commentService;
     @Autowired
     CommentQueryService commentQueryService;
-
-
-
-    private Long createComment() {
+    @Autowired
+    PostRepository postRepository; // Added
+    private Long createComment(Long postId) { // Modified signature
+        Post post = postRepository.findById(postId).orElseThrow(); // Fetch Post
         CommentRequest request = CommentRequest.builder()
                 .content("content1")
-                .postId(1L)
-                .parentId(null)
+                .post(post) // Use Post entity
+                .parent(null)
                 .isDeleted(false)
                 .build();
         return commentService.createComment(request, 1L);
@@ -56,15 +57,16 @@ class CommentServiceImplTest {
 
         //given
         Long postId = createPost();
-        Long commentId = createComment();
+        Long commentId = createComment(postId); // Pass postId
 
         //when
         Comment comment = commentService.getComment(commentId);
 
         //then
-        assertThat(comment.getPostId()).isEqualTo(postId);
+        assertThat(comment.getPost().getId()).isEqualTo(postId); // Changed
         assertThat(comment.getContent()).isEqualTo("content1");
-        assertThat(comment.getParentId()).isNull();
+        assertThat(comment.getParent()).isNull(); // Changed
+
     }
 
     @Test
@@ -73,8 +75,8 @@ class CommentServiceImplTest {
     @Transactional
     void commentModify() {
         //given
-        createPost();
-        Long commentId = createComment();
+        Long postId = createPost(); // Added
+        Long commentId = createComment(postId); // Pass postId
         String newComment = "수정됨";
 
         //when
@@ -91,7 +93,7 @@ class CommentServiceImplTest {
     void deleteComment() {
         //given
         Long postId = createPost();
-        Long commentId = createComment();
+        Long commentId = createComment(postId); // Pass postId
 
         //when
         commentService.deleteComment(commentId, 1L);

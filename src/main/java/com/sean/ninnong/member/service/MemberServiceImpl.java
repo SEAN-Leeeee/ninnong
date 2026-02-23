@@ -8,6 +8,8 @@ import com.sean.ninnong.member.dto.MemberInfo;
 import com.sean.ninnong.member.repository.MemberRepository;
 import com.sean.ninnong.user.domain.User;
 import com.sean.ninnong.user.repository.UserRepository;
+import com.sean.ninnong.team.repository.TeamRepository;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,21 +20,27 @@ import java.util.stream.Collectors;
 
 import static com.sean.ninnong.common.enums.MemberStatus.ACTIVE;
 
+import com.sean.ninnong.team.domain.Team;
+
 @Service
 public class MemberServiceImpl implements MemberService, MemberReader {
     private final MemberRepository memberRepository;
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
-    public MemberServiceImpl(MemberRepository memberRepository, UserRepository userRepository) {
+    public MemberServiceImpl(MemberRepository memberRepository, UserRepository userRepository, TeamRepository teamRepository) {
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
+        this.teamRepository = teamRepository;
     }
 
     @Override
     public Member add(Long teamId, Long userId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new RuntimeException("팀이 없습니다.")); // Or a more specific exception
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("유저가 없습니다."));
-        Member member = Member.create(teamId, user);
+                .orElseThrow(() -> new RuntimeException("유저가 없습니다.")); // Or a more specific exception
+        Member member = Member.create(team, user);
         memberRepository.save(member);
 
         return member;
@@ -46,7 +54,7 @@ public class MemberServiceImpl implements MemberService, MemberReader {
 
     @Override
     public List<MemberInfo> getMemberList(Long teamId) {
-        List<Member> memberList = memberRepository.findByTeamIdAndStatusOrderByBackNumber(teamId, ACTIVE);
+        List<Member> memberList = memberRepository.findByTeam_IdAndStatusOrderByBackNumber(teamId, ACTIVE);
 
         return memberList.stream()
                 .map(MemberInfo::from)
@@ -57,7 +65,7 @@ public class MemberServiceImpl implements MemberService, MemberReader {
     @Transactional
     @Override
     public void updateMembersInfo(Long teamId, List<MemberInfo> updateMembersInfo, Long userId) {
-        Member editor = memberRepository.findByUser_IdAndTeamId(userId, teamId)
+        Member editor = memberRepository.findByUser_IdAndTeam_Id(userId, teamId)
                 .orElseThrow(() -> new UnauthorizedTeamAccessException(teamId));
 
         if (editor.getRole() != Role.LEADER) {

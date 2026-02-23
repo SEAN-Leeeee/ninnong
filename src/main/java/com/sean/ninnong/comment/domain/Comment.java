@@ -2,6 +2,7 @@ package com.sean.ninnong.comment.domain;
 
 import com.sean.ninnong.comment.dto.CommentRequest;
 import com.sean.ninnong.common.BaseEntity;
+import com.sean.ninnong.post.domain.Post;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,9 +26,11 @@ public class Comment extends BaseEntity {
     private Long writer;
 
     @Column(nullable = false)
-    private Long postId;
+    @ManyToOne
+    private Post post;
 
-    private Long parentId;
+    @ManyToOne
+    private Comment parent;
 
     @Column(nullable = false)
     private boolean isDeleted = false;
@@ -36,14 +39,14 @@ public class Comment extends BaseEntity {
     private LocalDateTime deletedAt;
 
     public static Comment create(CommentRequest request, Long writer) {
-        return new Comment(request.getContent(), writer, request.getPostId(), request.getParentId());
+        return new Comment(request.getContent(), writer, request.getPost(), request.getParent());
     }
 
-    public Comment(String content, Long writer, Long postId, Long parentId) {
+    public Comment(String content, Long writer, Post post, Comment parent) {
         this.content = content;
         this.writer = writer;
-        this.postId = postId;
-        this.parentId = parentId;
+        this.post = post;
+        this.parent = parent;
         this.isDeleted = false;
     }
 

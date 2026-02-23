@@ -16,7 +16,7 @@ public record ChildCommentResponse(
     public static ChildCommentResponse of(Comment parent,String writerNickname) {
         return new ChildCommentResponse(
                 parent.getId(),
-                parent.getParentId(),
+                parent.getParent() != null ? parent.getParent().getId() : null,
                 parent.getWriter(),
                 writerNickname,
                 parent.isDeleted() ? "삭제된 댓글입니다" : parent.getContent(),

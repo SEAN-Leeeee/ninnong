@@ -5,6 +5,7 @@ import com.sean.ninnong.common.enums.MemberStatus;
 import com.sean.ninnong.common.enums.Role;
 import com.sean.ninnong.member.dto.MemberInfo;
 import com.sean.ninnong.user.domain.User;
+import com.sean.ninnong.team.domain.Team;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -20,8 +21,9 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long teamId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -42,8 +44,8 @@ public class Member {
     private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
 
-    public Member(Long teamId, User user) {
-        this.teamId = teamId;
+    public Member(Team team, User user) {
+        this.team = team;
         this.user = user;
         this.backNumber = 0;
         this.position = MemberPosition.NONE;
@@ -54,8 +56,8 @@ public class Member {
         this.deletedAt = null;
     }
 
-    public static Member create(Long teamId, User user) {
-        return new Member(teamId, user);
+    public static Member create(Team team, User user) {
+        return new Member(team, user);
     }
 
 
@@ -109,7 +111,7 @@ public class Member {
     public String toString() {
         return "@@ Member{" +
                 "id=" + id +
-                ", teamId=" + teamId +
+                ", teamId=" + (team != null ? team.getId() : "null") +
                 ", userId=" + user.getId() +
                 ", backNumber=" + backNumber +
                 ", position=" + position +
@@ -122,5 +124,9 @@ public class Member {
 
     public MemberPosition getPosition() {
         return position;
+    }
+
+    public Team getTeam() {
+        return team;
     }
 }

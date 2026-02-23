@@ -3,6 +3,7 @@ package com.sean.ninnong.team.domain;
 import com.sean.ninnong.common.enums.TeamStatus;
 import com.sean.ninnong.exception.UnauthorizedTeamAccessException;
 import com.sean.ninnong.team.dto.TeamInfoRequest;
+import com.sean.ninnong.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,14 @@ public class Team {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
-    private Long creator;
-    @Column(nullable = false)
-    private Long leader;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "creator_id", nullable = false)
+    private User creator;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "leader_id", nullable = false)
+    private User leader;
     private String meetingDay;
     @Column(nullable = false)
     private String region;
@@ -37,9 +42,9 @@ public class Team {
     private TeamStatus isDeleted;
     private LocalDateTime deletedAt;
 
-    public Team(TeamInfoRequest teamInfo, Long creatorId){
-        this.creator = creatorId;
-        this.leader = creatorId;
+    public Team(TeamInfoRequest teamInfo, User creator){
+        this.creator = creator;
+        this.leader = creator;
         this.region = teamInfo.getRegion();
         this.name = teamInfo.getName();
         this.meetingDay = teamInfo.getMeetingDay();
@@ -51,8 +56,8 @@ public class Team {
         this.isDeleted = TeamStatus.ACTIVE;
         this.deletedAt = null;
     }
-    public static Team createTeam(TeamInfoRequest teamInfo, Long creatorId){
-       return new Team(teamInfo, creatorId);
+    public static Team createTeam(TeamInfoRequest teamInfo, User creator){
+       return new Team(teamInfo, creator);
     }
 
     public void softDeleteTeam() {
@@ -70,7 +75,7 @@ public class Team {
         this.logo = request.getLogo();
         this.description = request.getDescription();
     }
-    public void updateLeader(Long id) {this.leader = id;}
+    public void updateLeader(User newLeader) {this.leader = newLeader;}
 
     public void validateAuthorization(Long userId) {
         if (!this.leader.equals(userId)) {

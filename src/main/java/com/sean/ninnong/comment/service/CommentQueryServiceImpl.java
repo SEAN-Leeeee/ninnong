@@ -26,17 +26,17 @@ public class CommentQueryServiceImpl implements CommentQueryService {
         Map<Long, List<ChildCommentResponse>> childrenByRootId = new HashMap<>();
 
         for (Comment c : allComments) {
-            if (c.getParentId() == null) {
+            if (c.getParent() == null) {
                 roots.add(c);
                 childrenByRootId.putIfAbsent(c.getId(), new ArrayList<>());
             }
         }
 
         for (Comment c : allComments) {
-            Long parentId = c.getParentId();
-            if(parentId == null) continue;
+            Comment parent = c.getParent();
+            if(parent == null) continue;
             String nickname = userService.getNickname(c.getWriter());
-            childrenByRootId.get(parentId).add(ChildCommentResponse.of(c, nickname));
+            childrenByRootId.get(parent).add(ChildCommentResponse.of(c, nickname));
         }
 
         return roots.stream()

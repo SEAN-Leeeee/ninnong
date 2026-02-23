@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import com.sean.ninnong.user.domain.User;
 
 import java.time.LocalDateTime;
 
@@ -29,25 +30,26 @@ public class Post {
     private Category category;
     @Enumerated(EnumType.STRING)
     private PostSubject subject;
-    @Column(nullable = false)
-    private Long writer;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "writer_id", nullable = false)
+    private User writer;
     @Column(nullable = false)
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private LocalDateTime deletedAt;
 
-    private Post(PostRequest post, Long creatorId) {
+    private Post(PostRequest post, User writer) {
         changeTitle(post.getTitle());
         changeContent(post.getContent());
         changeCategory(post.getCategory());
         changeSubject(post.getSubject());
-        this.writer = creatorId;
+        this.writer = writer;
         touchCreatedAt();
         this.modifiedAt = null;
         this.deletedAt = null;
     }
 
-    public static Post create(PostRequest post, Long writer) {
+    public static Post create(PostRequest post, User writer) {
         return new Post(post, writer);
     }
 
@@ -55,7 +57,7 @@ public class Post {
         return id;
     }
 
-    public Long getWriter() {
+    public User getWriter() {
         return writer;
     }
 

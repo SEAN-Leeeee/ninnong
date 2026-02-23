@@ -1,5 +1,7 @@
 package com.sean.ninnong.comment.dto;
 
+import com.sean.ninnong.comment.domain.Comment;
+import com.sean.ninnong.post.domain.Post;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,14 +10,14 @@ import lombok.Getter;
 public class CommentRequest {
 
     private final String content;
-    private final Long postId;
-    private final Long parentId;
+    private final Post post;
+    private final Comment parent;
     private final boolean isDeleted;
 
-    private CommentRequest(String content, Long postId, Long parentId, boolean isDeleted) {
+    private CommentRequest(String content, Post post, Comment parent, boolean isDeleted) {
         this.content = content;
-        this.postId = postId;
-        this.parentId = parentId;
+        this.post = post;
+        this.parent = parent;
         this.isDeleted = isDeleted;
     }
 
