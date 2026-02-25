@@ -57,4 +57,8 @@ public class Comment extends BaseEntity {
     public void deleteComment(Long id) {
         this.isDeleted = true;
     }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
 }
