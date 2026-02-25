@@ -21,4 +21,13 @@ public class EmailVerificationController {
         emailVerificationService.sendVerificationEmail(email);
         return ResponseEntity.ok("이메일 전송 요청 완료");
     }
+
+    @PostMapping("/verify")
+    public ResponseEntity<String> verifyEmail(@RequestParam String email, @RequestParam String code) {
+        boolean result = emailVerificationService.verifyCode(email, code);
+        if (result) {
+            return ResponseEntity.ok("인증 성공");
+        }
+        return ResponseEntity.badRequest().body("인증 실패 - 코드가 틀리거나 만료되었습니다");
+    }
 }
