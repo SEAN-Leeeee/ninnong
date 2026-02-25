@@ -15,7 +15,7 @@ public class PostImage {
 
     @Column(nullable = false, length = 500)
     private String url;
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     @ManyToOne
     private Post post;
     @Column(nullable = false)

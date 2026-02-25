@@ -37,6 +37,10 @@ services:
       - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_TRANSACTION=DEBUG
       - LOGGING_LEVEL_ORG_HIBERNATE_SQL=DEBUG
       - SPRING_APPLICATION_JSON={"file":{"upload-dir":"/app/uploads"}}
+      - LOGGING_LEVEL_IO_AWSPRING=DEBUG
+
+      # --- AWS SQS ---
+
     volumes:
       - ./uploads:/app/uploads
     depends_on:

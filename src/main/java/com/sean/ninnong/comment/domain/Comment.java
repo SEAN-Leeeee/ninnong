@@ -25,8 +25,8 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private Long writer;
 
-    @Column(nullable = false)
     @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
     @ManyToOne

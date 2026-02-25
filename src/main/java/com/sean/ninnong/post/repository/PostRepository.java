@@ -11,19 +11,21 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("""
-        SELECT p.id, p.title, p.category, p.subject, p.writer, u.nickname, p.createdAt
-        FROM Post p
-        JOIN User u ON u.id = p.writer
-        WHERE p.deletedAt is null
-        ORDER BY p.createdAt DESC
-    """)
+    SELECT new com.sean.ninnong.post.dto.PostSummaryResponse(
+        p.id, p.title, p.category, p.subject, p.writer.id, p.writer.nickname, p.createdAt
+    )
+    FROM Post p
+    WHERE p.deletedAt is null
+    ORDER BY p.createdAt DESC
+""")
     List<PostSummaryResponse> findActivePostSummaries();
 
-    @Query(""" 
-        select p.id, p.title, p.content, p.category, p.subject, p.writer, u.nickname, p.createdAt
-        from Post p
-        join User u on u.id = p.writer
-        where p.id =:id AND p.deletedAt is null
+    @Query("""
+    SELECT new com.sean.ninnong.post.dto.PostResponse(
+        p.id, p.title, p.content, p.category, p.subject, p.writer.id, p.writer.nickname, p.createdAt
+    )
+    FROM Post p
+    WHERE p.id = :id AND p.deletedAt is null
 """)
     PostResponse findActivePostFrom(Long id);
 }
