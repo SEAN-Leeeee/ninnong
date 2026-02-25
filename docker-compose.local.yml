@@ -39,7 +39,6 @@ services:
       - SPRING_APPLICATION_JSON={"file":{"upload-dir":"/app/uploads"}}
       - LOGGING_LEVEL_IO_AWSPRING=DEBUG
 
-      # --- AWS SQS ---
 
     volumes:
       - ./uploads:/app/uploads
