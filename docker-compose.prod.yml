@@ -1,6 +1,11 @@
 version: "3.8"
 
 services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: always
+
   app:
     image: ${APP_IMAGE}
     container_name: spring-ninnong
@@ -28,6 +33,9 @@ services:
 
     volumes:
       - ./uploads:/app/uploads
+
+    depends_on:
+      - redis
 
     restart: always
 
