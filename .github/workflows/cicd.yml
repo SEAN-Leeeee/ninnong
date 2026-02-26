@@ -56,5 +56,5 @@ jobs:
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker pull $APP_IMAGE
             docker compose -f docker-compose.prod.yml down
-            APP_IMAGE=$APP_IMAGE docker compose -f docker-compose.prod.yml up -d
+            APP_IMAGE=$APP_IMAGE docker compose -f docker-compose.prod.yml up -d --build frontend  # ← 이렇게
             docker image prune -f
