@@ -53,8 +53,9 @@ jobs:
           envs: APP_IMAGE
           script: |
             cd ~/ninnong
+            git pull origin main                         
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker pull $APP_IMAGE
             docker compose -f docker-compose.prod.yml down
-            APP_IMAGE=$APP_IMAGE docker compose -f docker-compose.prod.yml up -d --build frontend  # ← 이렇게
+            APP_IMAGE=$APP_IMAGE docker compose -f docker-compose.prod.yml up -d --build frontend 
             docker image prune -f
