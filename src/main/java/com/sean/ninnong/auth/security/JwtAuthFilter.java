@@ -35,6 +35,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if ("OPTIONS".equalsIgnoreCase(method)) return true;
 
         return path.startsWith("/api/auth/") ||
+                path.startsWith("/api/email/") ||
                 path.startsWith("/swagger-ui/") ||
                 path.startsWith("/v3/api-docs/") ||
                 path.startsWith("/uploads/");
@@ -66,7 +67,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         } catch (Exception ex) {
             SecurityContextHolder.clearContext();
-            entryPoint.commence(request, response, (AuthenticationException) new RuntimeException("JWT 인증 실패"));
+            entryPoint.commence(request, response, new AuthenticationException(ex.getMessage(), ex) {});
         }
     }
 }
