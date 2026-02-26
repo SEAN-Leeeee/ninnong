@@ -30,10 +30,46 @@
 
       <div class="form-group">
         <label for="email">이메일</label>
-        <div class="input-wrap">
-          <input id="email" v-model="form.email" placeholder="이메일을 입력해주세요." />
-          <span v-if="errors.email" class="error">{{ errors.email }}</span>
+        <div class="input-wrap email-wrap">
+          <input
+              id="email"
+              v-model="form.email"
+              placeholder="이메일을 입력해주세요."
+              :disabled="emailVerified"
+          />
+          <button
+              type="button"
+              class="verify-btn"
+              @click="sendCode"
+              :disabled="!form.email || codeSending || emailVerified"
+          >
+            {{ emailVerified ? '인증완료 ✓' : codeSent ? '재발송' : '인증코드 발송' }}
+          </button>
         </div>
+        <span v-if="errors.email" class="error">{{ errors.email }}</span>
+      </div>
+
+      <!-- 인증 코드 입력 (발송 후 표시) -->
+      <div class="form-group" v-if="codeSent && !emailVerified">
+        <label for="verifyCode">인증 코드</label>
+        <div class="input-wrap email-wrap">
+          <input
+              id="verifyCode"
+              v-model="verifyCode"
+              placeholder="이메일로 받은 6자리 코드를 입력해주세요."
+              maxlength="6"
+          />
+          <button
+              type="button"
+              class="verify-btn"
+              @click="verifyEmail"
+              :disabled="!verifyCode || verifying"
+          >
+            {{ verifying ? '확인중...' : '확인' }}
+          </button>
+        </div>
+        <span v-if="errors.verifyCode" class="error">{{ errors.verifyCode }}</span>
+        <span class="hint">인증 코드는 5분간 유효합니다.</span>
       </div>
 
       <div class="form-group">
@@ -120,6 +156,13 @@ export default {
         NONE: '해당없음',
       },
       errors: {},
+
+      // 이메일 인증 관련
+      codeSent: false,
+      codeSending: false,
+      verifyCode: '',
+      verifying: false,
+      emailVerified: false,
     }
   },
   mounted() {
@@ -142,6 +185,51 @@ export default {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       return emailRegex.test(email)
     },
+
+    // 인증코드 발송
+    async sendCode() {
+      if (!this.form.email || !this.isValidEmail(this.form.email)) {
+        this.errors = { ...this.errors, email: '유효한 이메일 주소를 입력해주세요.' }
+        return
+      }
+      this.codeSending = true
+      try {
+        await api.post(`/email/send?email=${encodeURIComponent(this.form.email)}`)
+        this.codeSent = true
+        this.verifyCode = ''
+        this.errors = { ...this.errors, email: null, verifyCode: null }
+        alert('인증 코드가 발송되었습니다. 이메일을 확인해주세요.')
+      } catch (err) {
+        const msg = err.response?.data?.message || '인증 코드 발송에 실패했습니다.'
+        alert(msg)
+      } finally {
+        this.codeSending = false
+      }
+    },
+
+    // 인증코드 확인
+    async verifyEmail() {
+      if (!this.verifyCode.trim()) return
+      this.verifying = true
+      try {
+        const res = await api.post(
+            `/email/verify?email=${encodeURIComponent(this.form.email)}&code=${this.verifyCode}`
+        )
+        if (res.data === '인증 성공') {
+          this.emailVerified = true
+          this.errors = { ...this.errors, verifyCode: null, email: null }
+          alert('이메일 인증이 완료되었습니다!')
+        } else {
+          this.errors = { ...this.errors, verifyCode: '인증 코드가 올바르지 않습니다.' }
+        }
+      } catch (err) {
+        const msg = err.response?.data?.message || '인증 코드가 올바르지 않거나 만료되었습니다.'
+        this.errors = { ...this.errors, verifyCode: msg }
+      } finally {
+        this.verifying = false
+      }
+    },
+
     formCheck() {
       this.errors = {}
       if (!this.form.name.trim()) {
@@ -152,6 +240,8 @@ export default {
         this.errors.email = '이메일을 입력해주세요.'
       } else if (!this.isValidEmail(this.form.email)) {
         this.errors.email = '유효한 이메일 주소를 입력해주세요.'
+      } else if (!this.emailVerified) {
+        this.errors.email = '이메일 인증이 필요합니다.'
       }
 
       if (!this.form.nickname.trim()) {
@@ -191,9 +281,50 @@ export default {
           .catch((err) => {
             const msg = err.response?.data?.message || '오류가 발생했습니다. 관리자에게 문의하세요';
             alert(msg);
-
           })
     }
   },
 }
 </script>
+
+<style scoped>
+.email-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.email-wrap input {
+  flex: 1;
+}
+
+.verify-btn {
+  white-space: nowrap;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #3b82f6;
+  border-radius: 6px;
+  background: #3b82f6;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.verify-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.verify-btn:disabled {
+  background: #9ca3af;
+  border-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.hint {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+  display: block;
+}
+</style>

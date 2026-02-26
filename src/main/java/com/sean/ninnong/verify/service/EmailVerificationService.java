@@ -21,17 +21,20 @@ public class EmailVerificationService {
         redisTemplate.opsForValue().set("verify:" + email, code, Duration.ofSeconds(EXPIRATION_SECONDS));
         producer.send(email, code);
     }
-
     public boolean verifyCode(String email, String code) {
         String savedCode = redisTemplate.opsForValue().get("verify:" + email);
         if (savedCode == null) return false;
         if (savedCode.equals(code)) {
-            redisTemplate.delete("verify:" + email); // 인증 완료 후 삭제
+            redisTemplate.delete("verify:" + email);
+            redisTemplate.opsForValue().set("verified:" + email, "true", Duration.ofMinutes(10));
             return true;
         }
         return false;
     }
 
+    public boolean isVerified(String email) {
+        return "true".equals(redisTemplate.opsForValue().get("verified:" + email));
+    }
     private String generateCode() {
         return String.valueOf((int) (Math.random() * 900000) + 100000);
     }
