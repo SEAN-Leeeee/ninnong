@@ -62,18 +62,18 @@
     <div class="children" v-if="comment.children && comment.children.length > 0" >
       <div
           class="comment-item is-child"
-          :class="{ 'is-deleted': child.idDeleted, 'is-own': isOwner(child.writer) }"
+          :class="{ 'is-deleted': child.isDeleted, 'is-own': isOwner(child.writerId) }"
           v-for="child in comment.children"
           :key="child.id"
       >
         <div class="comment-main">
           <div class="comment-meta" :data-menu-id="child.id">
-            <strong class="author">{{ displayAuthor(child.idDeleted, child.writerNickname) }}</strong>
+            <strong class="author">{{ displayAuthor(child.isDeleted, child.writerNickname) }}</strong>
             <span class="meta-sep">·</span>
             <time class="date">{{ formatDate(child.createdAt) }}</time>
             <span class="meta-spacer"></span>
             <button
-                v-if="isOwner(child.writer) && !child.idDeleted"
+                v-if="isOwner(child.writerId) && !child.isDeleted"
                 class="menu-button"
                 aria-label="more actions"
                 @click.stop="toggleMenu(child.id)"

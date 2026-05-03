@@ -1,6 +1,5 @@
 package com.sean.ninnong.comment.domain;
 
-import com.sean.ninnong.comment.dto.CommentRequest;
 import com.sean.ninnong.common.BaseEntity;
 import com.sean.ninnong.post.domain.Post;
 import jakarta.persistence.*;
@@ -37,10 +36,6 @@ public class Comment extends BaseEntity {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private LocalDateTime deletedAt;
-
-    public static Comment create(CommentRequest request, Long writer) {
-        return new Comment(request.getContent(), writer, request.getPost(), request.getParent());
-    }
 
     public Comment(String content, Long writer, Post post, Comment parent) {
         this.content = content;

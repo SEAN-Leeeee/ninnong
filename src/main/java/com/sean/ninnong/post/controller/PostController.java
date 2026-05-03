@@ -6,6 +6,7 @@ import com.sean.ninnong.post.dto.PostResponse;
 import com.sean.ninnong.post.dto.PostResponseMsg;
 import com.sean.ninnong.post.dto.PostSummaryResponse;
 import com.sean.ninnong.post.service.PostService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -32,14 +33,14 @@ public class PostController {
         return ResponseEntity.ok().body(postService.getPostFrom(id));
     }
     @PostMapping
-    public ResponseEntity<PostResponseMsg> createPost(@RequestBody PostRequest post, @AuthenticationPrincipal UserPrincipal user) {
+    public ResponseEntity<PostResponseMsg> createPost(@Valid @RequestBody PostRequest post, @AuthenticationPrincipal UserPrincipal user) {
         Long id = postService.createPost(post, user.getId());
 
         return ResponseEntity.ok().body(PostResponseMsg.create(id));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<PostResponseMsg> modifyPost(@PathVariable Long id, @RequestBody PostRequest modifyPost, @AuthenticationPrincipal UserPrincipal user) {
+    public ResponseEntity<PostResponseMsg> modifyPost(@PathVariable Long id, @Valid @RequestBody PostRequest modifyPost, @AuthenticationPrincipal UserPrincipal user) {
         postService.modifyPost(modifyPost, id, user.getId());
 
         return ResponseEntity.ok().body(PostResponseMsg.modify(id));

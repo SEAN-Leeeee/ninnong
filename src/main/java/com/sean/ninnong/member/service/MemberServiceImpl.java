@@ -62,6 +62,13 @@ public class MemberServiceImpl implements MemberService, MemberReader {
     }
 
 
+    @Override
+    public String getMyRole(Long teamId, Long userId) {
+        return memberRepository.findByUser_IdAndTeam_Id(userId, teamId)
+                .map(m -> m.getRole().name())
+                .orElse("NONE");
+    }
+
     @Transactional
     @Override
     public void updateMembersInfo(Long teamId, List<MemberInfo> updateMembersInfo, Long userId) {

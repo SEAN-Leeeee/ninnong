@@ -12,6 +12,7 @@ import com.sean.ninnong.exception.ApplicationNotFoundException;
 import com.sean.ninnong.member.service.MemberService;
 import com.sean.ninnong.user.domain.User;
 import com.sean.ninnong.user.repository.UserRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +40,17 @@ public class TeamApplicationServiceImpl implements TeamApplicationService{
     @Override
     public ApplicationResponse findMyApplication(Long applicantId) {
         return teamApplicationRepository
-                .findByApplicantAndStatus(applicantId, ApplicationStatus.PENDING)
+                .findTopByApplicantOrderByRequestAtDesc(applicantId)
                 .map(TeamApplication::toResponse)
                 .orElse(ApplicationResponse.empty());
+    }
+
+    @Override
+    @Transactional
+    public void checkMyApplication(Long applicantId) {
+        teamApplicationRepository
+                .findTopByApplicantOrderByRequestAtDesc(applicantId)
+                .ifPresent(TeamApplication::checkResponse);
     }
 
     @Override
@@ -63,18 +72,24 @@ public class TeamApplicationServiceImpl implements TeamApplicationService{
     }
 
     @Override
-    public List<UserApplication> getTeamApplications(Long teamId) {
+    public List<UserApplication> getTeamApplications(Long teamId, Long requesterId) {
+        if (!"LEADER".equals(memberService.getMyRole(teamId, requesterId))) {
+            throw new AccessDeniedException("리더만 가입 신청 목록을 조회할 수 있습니다.");
+        }
         return teamApplicationRepository.findUserApplicationsByTeamId(teamId);
     }
 
     @Override
     @Transactional
     public void responseTo(Long teamId, ApplicationDecisionRequest request, Long charge) {
-        TeamApplication application = findApplication(teamId, request.getApplicant().getId());
+        if (!"LEADER".equals(memberService.getMyRole(teamId, charge))) {
+            throw new AccessDeniedException("리더만 가입 신청을 처리할 수 있습니다.");
+        }
+        TeamApplication application = findApplication(teamId, request.getApplicantId());
         application.applyDecision(request, charge);
 
         if (request.getDecision() == ApplicationStatus.ACCEPT) {
-            memberService.add(application.getTeamId(), request.getApplicant().getId());
+            memberService.add(application.getTeamId(), request.getApplicantId());
         }
     }
 

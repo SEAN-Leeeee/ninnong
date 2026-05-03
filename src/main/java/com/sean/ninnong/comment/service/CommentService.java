@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface CommentService {
 
-    Long createComment(CommentRequest request, Long writer);
+    Long createComment(CommentRequest request, Long postId, Long writer);
 
     Comment getComment(Long postId);
 

@@ -14,4 +14,6 @@ public interface MemberService {
     List<MemberInfo> getMemberList(Long teamId);
 
     void updateMembersInfo(Long teamId, List<MemberInfo> updateMembersInfo, Long userId);
+
+    String getMyRole(Long teamId, Long userId);
 }

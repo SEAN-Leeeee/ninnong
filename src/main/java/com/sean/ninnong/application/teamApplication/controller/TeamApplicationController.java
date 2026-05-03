@@ -7,6 +7,7 @@ import com.sean.ninnong.application.teamApplication.service.TeamApplicationServi
 import com.sean.ninnong.application.teamApplication.dto.ApplicationDecisionRequest;
 import com.sean.ninnong.application.teamApplication.dto.UserApplication;
 import com.sean.ninnong.auth.security.UserPrincipal;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class TeamApplicationController {
     }
 
     @PostMapping("/{teamId}")
-    public ResponseEntity<ApplicationResponseMsg> apply(@PathVariable Long teamId, @RequestBody ApplicationRequest request, @AuthenticationPrincipal UserPrincipal user) {
+    public ResponseEntity<ApplicationResponseMsg> apply(@PathVariable Long teamId, @Valid @RequestBody ApplicationRequest request, @AuthenticationPrincipal UserPrincipal user) {
         teamApplicationService.applyWith(teamId, request, user.getId());
 
         return ResponseEntity.ok(ApplicationResponseMsg.submittedApplication(teamId));
@@ -38,7 +39,7 @@ public class TeamApplicationController {
 
 
     @PatchMapping("/{teamId}")
-    public ResponseEntity<ApplicationResponseMsg> responseToApplication(@PathVariable Long teamId, @RequestBody ApplicationDecisionRequest request, @AuthenticationPrincipal UserPrincipal user) {
+    public ResponseEntity<ApplicationResponseMsg> responseToApplication(@PathVariable Long teamId, @Valid @RequestBody ApplicationDecisionRequest request, @AuthenticationPrincipal UserPrincipal user) {
         teamApplicationService.responseTo(teamId, request, user.getId());
 
         return ResponseEntity.ok(ApplicationResponseMsg.applyOf(teamId, request.getDecision()));
@@ -47,13 +48,18 @@ public class TeamApplicationController {
     @GetMapping("/mine")
     public ResponseEntity<ApplicationResponse> findMyApplication(@AuthenticationPrincipal UserPrincipal user) {
         ApplicationResponse myApplication = teamApplicationService.findMyApplication(user.getId());
-
         return ResponseEntity.ok(myApplication);
+    }
+
+    @PatchMapping("/mine/check")
+    public ResponseEntity<Void> checkMyApplication(@AuthenticationPrincipal UserPrincipal user) {
+        teamApplicationService.checkMyApplication(user.getId());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{teamId}")
     public ResponseEntity<List<UserApplication>> getTeamApplications(@AuthenticationPrincipal UserPrincipal user, @PathVariable Long teamId) {
-        List<UserApplication> response = teamApplicationService.getTeamApplications(teamId);
+        List<UserApplication> response = teamApplicationService.getTeamApplications(teamId, user.getId());
 
         return ResponseEntity.ok(response);
     }

@@ -1,5 +1,6 @@
 # --- 공통 ---
 .DS_Store
+.claude/
 *.log
 logs/
 tmp/
@@ -50,6 +51,8 @@ frontend/.env.*
 src/main/resources/application.yml
 src/main/resources/application-*.yml
 src/main/resources/*.properties
+src/test/resources/*.properties
+src/test/resources/application-*.yml
 # 예시 파일만 허용(원하면 사용)
 !src/main/resources/application-example.yml
 docker-compose.prod.yml

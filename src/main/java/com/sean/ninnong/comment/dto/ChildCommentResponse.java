@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 public record ChildCommentResponse(
         Long id,
         Long parentId,
-        Long writer,
+        Long writerId,
         String writerNickname,
         String content,
-        boolean idDeleted,
+        boolean isDeleted,
         LocalDateTime createdAt
 ) {
-    public static ChildCommentResponse of(Comment parent,String writerNickname) {
+    public static ChildCommentResponse of(Comment parent, String writerNickname) {
         return new ChildCommentResponse(
                 parent.getId(),
                 parent.getParent() != null ? parent.getParent().getId() : null,

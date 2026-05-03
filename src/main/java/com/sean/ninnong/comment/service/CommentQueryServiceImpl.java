@@ -36,7 +36,10 @@ public class CommentQueryServiceImpl implements CommentQueryService {
             Comment parent = c.getParent();
             if(parent == null) continue;
             String nickname = userService.getNickname(c.getWriter());
-            childrenByRootId.get(parent).add(ChildCommentResponse.of(c, nickname));
+            List<ChildCommentResponse> children = childrenByRootId.get(parent.getId());
+            if (children != null) {
+                children.add(ChildCommentResponse.of(c, nickname));
+            }
         }
 
         return roots.stream()

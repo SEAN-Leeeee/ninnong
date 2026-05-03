@@ -69,7 +69,6 @@
           </button>
         </div>
         <span v-if="errors.verifyCode" class="error">{{ errors.verifyCode }}</span>
-        <span class="hint">인증 코드는 5분간 유효합니다.</span>
       </div>
 
       <div class="form-group">
@@ -90,11 +89,6 @@
               placeholder="영문, 숫자, 특수문자 중 2가지 이상 포함"
           />
           <span v-if="errors.password" class="error">{{ errors.password }}</span>
-        </div>
-        <div class="password-hint">
-          <br />
-          비밀번호는 8자 이상 ,
-          영문/숫자/특수문자 중 2가지 이상 포함<br />
         </div>
       </div>
 

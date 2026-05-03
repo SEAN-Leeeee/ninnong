@@ -7,6 +7,7 @@ import com.sean.ninnong.team.dto.TeamResponse;
 import com.sean.ninnong.team.dto.TeamMsgResponse;
 import com.sean.ninnong.user.domain.User;
 import com.sean.ninnong.user.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,7 +27,7 @@ public class TeamController {
     }
 
     @PostMapping
-    public ResponseEntity<TeamMsgResponse> createTeam(@RequestBody TeamInfoRequest request, @AuthenticationPrincipal UserPrincipal user) {
+    public ResponseEntity<TeamMsgResponse> createTeam(@Valid @RequestBody TeamInfoRequest request, @AuthenticationPrincipal UserPrincipal user) {
        Long teamId = teamService.createTeam(request, user.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(TeamMsgResponse.createFrom(teamId));
@@ -46,7 +47,7 @@ public class TeamController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<TeamMsgResponse> updateTeamInfo(@RequestBody TeamInfoRequest request,
+    public ResponseEntity<TeamMsgResponse> updateTeamInfo(@Valid @RequestBody TeamInfoRequest request,
                                                           @PathVariable Long id,
                                                           @AuthenticationPrincipal UserPrincipal user) {
         teamService.updateOf(id, request, user.getId());

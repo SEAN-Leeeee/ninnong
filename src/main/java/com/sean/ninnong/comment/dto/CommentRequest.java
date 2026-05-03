@@ -1,7 +1,7 @@
 package com.sean.ninnong.comment.dto;
 
-import com.sean.ninnong.comment.domain.Comment;
-import com.sean.ninnong.post.domain.Post;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,16 +9,13 @@ import lombok.Getter;
 @Getter
 public class CommentRequest {
 
+    @NotBlank @Size(max = 1000)
     private final String content;
-    private final Post post;
-    private final Comment parent;
-    private final boolean isDeleted;
+    private final Long parentId;
 
-    private CommentRequest(String content, Post post, Comment parent, boolean isDeleted) {
+    private CommentRequest(String content, Long parentId) {
         this.content = content;
-        this.post = post;
-        this.parent = parent;
-        this.isDeleted = isDeleted;
+        this.parentId = parentId;
     }
 
 }

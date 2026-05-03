@@ -8,9 +8,10 @@ public record ApplicationResponse(Long targetId,
                                   Long teamId,
                                   ApplicationStatus status,
                                   LocalDateTime respondedAt,
-                                  String responseMsg) {
+                                  String responseMsg,
+                                  Boolean isResponseChecked) {
 
     public static ApplicationResponse empty() {
-        return new ApplicationResponse(null, 0L, null, null, null);
+        return new ApplicationResponse(null, 0L, null, null, null, null);
     }
 }

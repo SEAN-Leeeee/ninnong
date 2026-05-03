@@ -57,8 +57,12 @@ public class TeamApplication implements Application {
         this.status = ApplicationStatus.CANCELED;
     }
 
-    public ApplicationResponse toResponse( ) {
-        return new ApplicationResponse(applicant, teamId, status, respondedAt, responseMsg);
+    public void checkResponse() {
+        this.isResponseChecked = true;
+    }
+
+    public ApplicationResponse toResponse() {
+        return new ApplicationResponse(applicant, teamId, status, respondedAt, responseMsg, isResponseChecked);
     }
 
     public Long getTeamId() {

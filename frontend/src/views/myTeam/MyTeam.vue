@@ -35,7 +35,11 @@
       </aside>
 
       <main class="team-panel">
-        <JoinRequestsPanel v-if="selectedTab === 'joinRequests' && isLeader" />
+        <JoinRequestsPanel
+            v-if="selectedTab === 'joinRequests' && isLeader"
+            :team-id="team.id"
+            :is-leader="isLeader"
+        />
         <MemberManage
             v-if="selectedTab === 'member'"
             :memberList="memberList"
@@ -54,7 +58,6 @@
 <script>
 import api from "@/axios.js";
 import { useUserStore } from '@stores/user.js'
-import { watch } from 'vue';
 
 import AttendancePanel from './Activities.vue'
 import VideoPanel from './VideoPanel.vue'
@@ -73,47 +76,45 @@ export default {
   data() {
     return {
       team: {},
-      memberList:[],
-      selectedTab: 'member',
-      tabs: [
-        { label: '가입 요청', value: 'joinRequests' },
-        { label: '멤버', value: 'member' },
-        // { label: '활동', value: 'activities' },
-        // { label: '영상', value: 'video' },
-        // { label: '회비', value: 'fee' }
-      ],
-      leader: {},
+      memberList: [],
       isLeader: false,
+      selectedTab: 'member',
     };
   },
-  mounted() {
-    watch(
-        () => this.user,
-        (newUser) => {
-          if (newUser && newUser.teamId) {
-            this.getTeamInfo(newUser.teamId);
-            this.getMemberList(newUser.teamId);
-          }
-        },
-        { immediate: true },
-
-    );
+  async mounted() {
+    const teamId = this.user?.teamId;
+    if (!teamId) return;
+    await Promise.all([
+      this.getTeamInfo(teamId),
+      this.getMemberList(teamId),
+      this.fetchMyRole(teamId),
+    ]);
   },
   computed: {
     user() {
       const userStore = useUserStore();
       return userStore.currentUser;
     },
+    leader() {
+      return this.memberList.find(member => member.role === 'LEADER') || {};
+    },
+    tabs() {
+      const list = [{ label: '멤버', value: 'member' }];
+      if (this.isLeader) list.unshift({ label: '가입 요청', value: 'joinRequests' });
+      return list;
+    },
   },
   methods: {
     getTeamLogo(team) {
-      return team.logo ? `http://localhost:8080${team.logo}` : '/basic.png';
+      return team.logo ? team.logo : '/basic.png';
+    },
+    async fetchMyRole(teamId) {
+      const res = await api.get(`/members/${teamId}/my-role`);
+      this.isLeader = res.data === 'LEADER';
     },
     async getMemberList(teamId) {
       const res = await api.get(`/members/${teamId}`);
       this.memberList = res.data;
-
-      this.findLeader();
     },
     async getTeamInfo(teamId) {
       const res = await api.get(`/teams/${teamId}`);
@@ -122,10 +123,6 @@ export default {
         memberCount: res.data.memberCount,
         description: res.data.description,
       };
-    },
-    findLeader() {
-      this.leader = this.memberList.find(member => member.role === 'LEADER');
-      this.isLeader = this.leader.userId === this.user.id;
     },
     async handleSaveMembers(updatedList) {
       await api.patch(`/members/${this.team.id}`, updatedList);

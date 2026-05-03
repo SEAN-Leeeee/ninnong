@@ -59,7 +59,7 @@ public class User  {
     public User(RegisterRequest request, String encodedPassword) {
         this.email = request.getEmail();
         this.name = request.getName();
-        this.nickname = request.getName();
+        this.nickname = request.getNickname();
         this.password = encodedPassword;
         this.status = UserStatus.PENDING;
         this.createdAt = LocalDateTime.now();

@@ -37,6 +37,8 @@ const props = defineProps({
   postId: { type: Number, required: true },
 });
 
+const userStore = useUserStore();
+
 const comments = ref([]);
 const newComment = ref('');
 const isLoading = ref(false);
@@ -99,8 +101,6 @@ const handleAddComment = async (content) => {
   }
 };
 
-const userStore = useUserStore();
-
 const handleAddReply = async ({ parentId, content }) => {
   try {
     const res = await api.post(`/comments/${props.postId}`, {
@@ -122,9 +122,9 @@ const handleAddReply = async ({ parentId, content }) => {
       id: newCommentFromServer.id,
       content: newCommentFromServer.content || content,
       createdAt: newCommentFromServer.createdAt || new Date().toISOString(),
-      writer: { id: currentUser.id }, // The template expects a 'writer' object with an 'id'
+      writerId: currentUser.id,
       writerNickname: currentUser.nickname,
-      idDeleted: false,
+      isDeleted: false,
       children: [],
     };
 
@@ -178,7 +178,6 @@ const handleDeleteComment = async (commentId) => {
           // Always mark as deleted, never remove from the list.
           // This ensures the "deleted" message can be displayed.
           comment.isDeleted = true;
-          comment.idDeleted = true; // Set both properties to handle data inconsistency
           comment.content = '삭제된 댓글입니다.';
           return true;
         }

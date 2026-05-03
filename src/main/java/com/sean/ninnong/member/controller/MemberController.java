@@ -5,6 +5,7 @@ import com.sean.ninnong.member.dto.MemberInfo;
 import com.sean.ninnong.member.service.MemberService;
 import com.sean.ninnong.member.dto.TeamMemberRequest;
 import com.sean.ninnong.member.dto.MemberResponseMsg;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,20 +25,30 @@ public class MemberController {
 
 
     @PostMapping
-    public ResponseEntity<MemberResponseMsg> create(@RequestBody TeamMemberRequest request) {
+    public ResponseEntity<MemberResponseMsg> create(@RequestBody TeamMemberRequest request, @AuthenticationPrincipal UserPrincipal user) {
+        String role = memberService.getMyRole(request.getTeamId(), user.getId());
+        if (!"LEADER".equals(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         memberService.add(request.getTeamId(), request.getUserId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(MemberResponseMsg.addFrom(request.getUserId()));
     }
 
     @GetMapping("/{teamId}")
-    public ResponseEntity<List<MemberInfo>> getMemberList(@PathVariable Long teamId) {
+    public ResponseEntity<List<MemberInfo>> getMemberList(@PathVariable Long teamId, @AuthenticationPrincipal UserPrincipal user) {
 
         return ResponseEntity.ok().body(memberService.getMemberList(teamId));
     }
 
+    @GetMapping("/{teamId}/my-role")
+    public ResponseEntity<String> getMyRole(@PathVariable Long teamId, @AuthenticationPrincipal UserPrincipal user) {
+        String role = memberService.getMyRole(teamId, user.getId());
+        return ResponseEntity.ok(role);
+    }
+
     @PatchMapping("/{teamId}")
-    public ResponseEntity<MemberResponseMsg> updateMembersInfo(@PathVariable Long teamId, @RequestBody List<MemberInfo> updateMembersInfo, @AuthenticationPrincipal UserPrincipal user) {
+    public ResponseEntity<MemberResponseMsg> updateMembersInfo(@PathVariable Long teamId, @Valid @RequestBody List<MemberInfo> updateMembersInfo, @AuthenticationPrincipal UserPrincipal user) {
         memberService.updateMembersInfo(teamId, updateMembersInfo, user.getId());
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(MemberResponseMsg.updateFrom(teamId));

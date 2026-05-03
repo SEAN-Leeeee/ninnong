@@ -116,6 +116,7 @@ export default {
       });
     },
     emptyCardCount() {
+      if (this.selectedLocation !== "" || this.filterRecruiting) return 0;
       const totalCards = (this.isNotInTeam ? 1 : 0) + this.filteredTeams.length;
       const minCards = totalCards <= 8 ? 8 : Math.ceil(totalCards / 4) * 4;
       return minCards - totalCards;
@@ -131,15 +132,13 @@ export default {
       try {
         const res = await api.get('/teamApplication/mine');
         this.myApplication = res.data;
-        console.log("myApplication");
-        console.log(res.data);
       }  catch (err) {
         const msg = err.response?.data?.message || '오류가 발생했습니다. 관리자에게 문의하세요';
         alert(msg);
       }
     },
     getTeamLogo(team) {
-      return team.logo ? `http://localhost:8080${team.logo}` : '/basic.png';
+      return team.logo ? team.logo : '/basic.png';
     },
     async loadTeams() {
       try {

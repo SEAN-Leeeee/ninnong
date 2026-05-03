@@ -16,8 +16,11 @@ public interface TeamApplicationService {
 
     ApplicationResponse findMyApplication(Long applicantId);
 
-    List<UserApplication> getTeamApplications(Long teamId);
+    List<UserApplication> getTeamApplications(Long teamId, Long requesterId);
 
     @Transactional
     void responseTo(Long teamId, ApplicationDecisionRequest request, Long charge);
+
+    @Transactional
+    void checkMyApplication(Long applicantId);
 }
